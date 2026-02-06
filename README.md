@@ -72,6 +72,46 @@ A high-level architecture diagram:
 +---------------+
 ```
 
+The directory structure of the project:
+
+```
+task-manager/
+├── docker/
+│   ├── docker-compose.yml
+│   ├── Dockerfile
+│   ├── .env
+│   └── .dockerignore
+├── src/
+│   ├── user-service/
+│   │   ├── app.module.ts
+│   │   ├── main.ts
+│   │   ├── user/
+│   │   │   ├── user.entity.ts
+│   │   │   ├── user.service.ts
+│   │   │   └── user.controller.ts
+│   │   └── ...
+│   ├── task-service/
+│   │   ├── app.module.ts
+│   │   ├── main.ts
+│   │   ├── task/
+│   │   │   ├── task.entity.ts
+│   │   │   ├── task.service.ts
+│   │   │   └── task.controller.ts
+│   │   └── ...
+│   ├── notification-service/
+│   │   ├── app.module.ts
+│   │   ├── main.ts
+│   │   ├── notification/
+│   │   │   ├── notification.entity.ts
+│   │   │   ├── notification.service.ts
+│   │   │   └── notification.controller.ts
+│   │   └── ...
+│   └── ...
+├── package.json
+├── tsconfig.json
+└── .gitignore
+```
+
 ## Project setup
 
 ```bash
