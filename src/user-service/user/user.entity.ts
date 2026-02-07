@@ -21,3 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    CreateDateColumn,
+    UpdateDateColumn
+} from "typeorm";
+
+@Entity('users')
+export class User {
+
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ unique: true, length: 50 })
+    name: string;
+
+    @Column({ unique: true, length: 100 })
+    email: string;
+
+    @Column({ name: "password_hash" })
+    password: string;
+
+    // It is possible to add a 'role' column for RBAC later
+    // @Column({ type: 'enum', enum: ['admin', 'user'], default: 'user' })
+    // role: string;
+
+    @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
+    updatedAt: Date;
+}   
