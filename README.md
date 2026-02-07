@@ -75,41 +75,58 @@ A high-level architecture diagram:
 The directory structure of the project:
 
 ```
-task-manager/
-├── docker/
-│   ├── docker-compose.yml
-│   ├── Dockerfile
-│   ├── .env
-│   └── .dockerignore
-├── src/
-│   ├── user-service/
-│   │   ├── app.module.ts
-│   │   ├── main.ts
-│   │   ├── user/
-│   │   │   ├── user.entity.ts
-│   │   │   ├── user.service.ts
-│   │   │   └── user.controller.ts
-│   │   └── ...
-│   ├── task-service/
-│   │   ├── app.module.ts
-│   │   ├── main.ts
-│   │   ├── task/
-│   │   │   ├── task.entity.ts
-│   │   │   ├── task.service.ts
-│   │   │   └── task.controller.ts
-│   │   └── ...
-│   ├── notification-service/
-│   │   ├── app.module.ts
-│   │   ├── main.ts
-│   │   ├── notification/
-│   │   │   ├── notification.entity.ts
-│   │   │   ├── notification.service.ts
-│   │   │   └── notification.controller.ts
-│   │   └── ...
-│   └── ...
+.
+├── docker-compose.yml
+├── Dockerfile
+├── .eslintrc.js
+├── .gitignore
+├── LICENSE
+├── nest-cli.json
 ├── package.json
-├── tsconfig.json
-└── .gitignore
+├── package-lock.json
+├── .prettierrc
+├── README.md
+├── schema.sql
+├── src
+│   ├── notification-service
+│   │   ├── app.controller.ts
+│   │   ├── app.module.ts
+│   │   ├── app.service.ts
+│   │   ├── main.ts
+│   │   └── notification
+│   │       ├── notification.controller.ts
+│   │       ├── notification.entity.ts
+│   │       └── notification.service.ts
+│   ├── task-service
+│   │   ├── app.controller.ts
+│   │   ├── app.module.ts
+│   │   ├── app.service.ts
+│   │   ├── main.ts
+│   │   └── task
+│   │       ├── task.controller.ts
+│   │       ├── task.entity.ts
+│   │       └── task.service.ts
+│   └── user-service
+│       ├── app.controller.ts
+│       ├── app.module.ts
+│       ├── app.service.ts
+│       ├── auth
+│       │   ├── auth.controller.ts
+│       │   ├── auth.module.ts
+│       │   ├── auth.service.ts
+│       │   ├── dto
+│       │   │   └── login.dto.ts
+│       │   └── jwt.strategy.ts
+│       ├── main.ts
+│       └── user
+│           ├── user.controller.ts
+│           ├── user.entity.ts
+│           └── user.service.ts
+├── test
+│   ├── app.e2e-spec.ts
+│   └── jest-e2e.json
+├── tsconfig.build.json
+└── tsconfig.json
 ```
 
 ## Database Structure
