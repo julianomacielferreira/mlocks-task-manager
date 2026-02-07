@@ -24,6 +24,66 @@ services:
     volumes:
       - rabbitmqdata:/var/lib/rabbitmq
 
+  user-service:
+    build: .
+    container_name: mlocks_task_manager_user_service
+    environment:
+        DATABASE_HOST: postgres
+        DATABASE_PORT: 5432
+        DATABASE_USER: postgres
+        DATABASE_PASSWORD: password
+        DATABASE_NAME: task_manager
+        RABBITMQ_HOST: rabbitmq
+        RABBITMQ_PORT: 5672
+        RABBITMQ_USER: guest
+        RABBITMQ_PASS: guest
+    depends_on:
+      - postgres
+      - rabbitmq
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src/user-service:/app/src
+      - ./package.json:/app/package.json
+
+  task-service:
+    build: .
+    container_name: mlocks_task_manager_task_service
+    environment:
+        DATABASE_HOST: postgres
+        DATABASE_PORT: 5432
+        DATABASE_USER: postgres
+        DATABASE_PASSWORD: password
+        DATABASE_NAME: task_manager
+        RABBITMQ_HOST: rabbitmq
+        RABBITMQ_PORT: 5672
+        RABBITMQ_USER: guest
+        RABBITMQ_PASS: guest
+    depends_on:
+      - postgres
+      - rabbitmq
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./src/task-service:/app/src
+      - ./package.json:/app/package.json
+
+  notification-service:
+    build: .
+    container_name: mlocks_task_manager_notification_service
+    environment:
+        RABBITMQ_HOST: rabbitmq
+        RABBITMQ_PORT: 5672
+        RABBITMQ_USER: guest
+        RABBITMQ_PASS: guest
+    depends_on:
+      - rabbitmq
+    ports:
+      - "3002:3000"
+    volumes:
+      - ./src/notification-service:/app/src
+      - ./package.json:/app/package.json
+      
 volumes:
   pgdata:
   rabbitmqdata:
