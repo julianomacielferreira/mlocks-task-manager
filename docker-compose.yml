@@ -45,6 +45,7 @@ services:
     volumes:
       - ./src/user-service:/app/src
       - ./package.json:/app/package.json
+    command: npm run start:dev
 
   task-service:
     build: .
@@ -67,6 +68,7 @@ services:
     volumes:
       - ./src/task-service:/app/src
       - ./package.json:/app/package.json
+    command: npm run start:dev
 
   notification-service:
     build: .
@@ -83,6 +85,7 @@ services:
     volumes:
       - ./src/notification-service:/app/src
       - ./package.json:/app/package.json
+    command: npm run start:dev
       
 volumes:
   pgdata:
