@@ -219,23 +219,23 @@ CREATE INDEX idx_notifications_is_read ON notifications (is_read);
 
 ### Key features of the Schema:
 
-- Primary Keys (SERIAL PRIMARY KEY): Ensures each record has a unique identifier and automatically increments.
+- **Primary Keys (`SERIAL PRIMARY KEY`)**: Ensures each record has a unique identifier and automatically increments.
 
-- Foreign Keys (FOREIGN KEY ... REFERENCES ...): Establishes relationships between tables (tasks to users, notifications to users and tasks).
+- **Foreign Keys (`FOREIGN KEY ... REFERENCES ...`)**: Establishes relationships between tables (tasks to users, notifications to users and tasks).
 
-- ON DELETE SET NULL: For assigned_to_user_id and notification.task_id, if the referenced user/task is deleted, the foreign key column is set to NULL.
+- **`ON DELETE SET NULL`**: For assigned_to_user_id and notification.task_id, if the referenced user/task is deleted, the foreign key column is set to NULL.
 
-- ON DELETE CASCADE: For created_by_user_id and notification.user_id, if the referenced user is deleted, all their associated tasks/notifications are also deleted. Be careful with CASCADE!
+- **`ON DELETE CASCADE`**: For created_by_user_id and notification.user_id, if the referenced user is deleted, all their associated tasks/notifications are also deleted. Be careful with CASCADE!
 
-- Default Values (DEFAULT ...): Provides initial values for columns like status, priority, is_read, created_at, and updated_at.
+- **Default Values (`DEFAULT ...`)**: Provides initial values for columns like status, priority, is_read, created_at, and updated_at.
 
-- NOT NULL Constraints: Ensures critical fields always have values.
+- **`NOT NULL` Constraints**: Ensures critical fields always have values.
 
-- UNIQUE Constraints: Guarantees no two users can have the same username or email.
+- **`UNIQUE` Constraints**: Guarantees no two users can have the same username or email.
 
-- Indexes (CREATE INDEX): Improves query performance on frequently searched or joined columns.
+- **Indexes (`CREATE INDEX`)**: Improves query performance on frequently searched or joined columns.
 
-- updated_at Trigger: Automatically updates the updated_at timestamp whenever a row is modified in users or tasks. This is super handy for tracking changes.
+- **`updated_at` Trigger**: Automatically updates the updated_at timestamp whenever a row is modified in users or tasks. This is super handy for tracking changes.
 
 ## Project setup
 
