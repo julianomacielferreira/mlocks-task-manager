@@ -26,30 +26,30 @@
 
 The task manager application will have the following features:
 
-- User Service: handles user registration, login, and profile management
-- Task Service: manages tasks, including creation, assignment, and status updates
-- Notification Service: sends notifications to users when tasks are assigned or updated
+- **User Service**: handles user registration, login, and profile management
+- **Task Service**: manages tasks, including creation, assignment, and status updates
+- **Notification Service**: sends notifications to users when tasks are assigned or updated
 
-Technologies Used
+## Technologies Used
 
-- NestJS: a progressive Node.js framework for building efficient and scalable server-side applications
+- **NestJS**: a progressive Node.js framework for building efficient and scalable server-side applications
 
-- Postgres: a powerful, open-source relational database
-- RabbitMQ: a message broker for handling communication between services
-- Docker: for containerization and deployment
+- **Postgres**: a powerful, open-source relational database
+- **RabbitMQ**: a message broker for handling communication between services
+- **Docker**: for containerization and deployment
 
-Security Features
+## Security Features
 
-- JWT Authentication: secure user authentication using JSON Web Tokens
-- Role-Based Access Control: restrict access to certain features based on user roles
-- Input Validation: validate user input to prevent SQL injection and cross-site scripting (XSS)
-- Encryption: encrypt sensitive data, such as passwords and notification tokens
+- **JWT Authentication**: secure user authentication using JSON Web Tokens
+- **Role-Based Access Control**: restrict access to certain features based on user roles
+- **Input Validation**: validate user input to prevent SQL injection and cross-site scripting (XSS)
+- **Encryption**: encrypt sensitive data, such as passwords and notification tokens
 
-Deployment Specifications
+## Deployment Specifications
 
-- Docker Compose: for orchestrating containers and managing dependencies
-- Kubernetes: for scaling and managing containers in production
-- Environment Variables: for storing sensitive data, such as database credentials and API keys
+- **Docker Compose**: for orchestrating containers and managing dependencies
+- **Kubernetes**: for scaling and managing containers in production
+- **Environment Variables**: for storing sensitive data, such as database credentials and API keys
 
 A high-level architecture diagram:
 
