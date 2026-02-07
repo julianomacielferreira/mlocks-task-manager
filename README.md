@@ -112,6 +112,131 @@ task-manager/
 └── .gitignore
 ```
 
+## Database Structure
+
+Explanation of Tables and Columns:
+
+_**users**_ Table:
+
+- **id**: Primary key, auto-incrementing integer.
+- **username**: Unique identifier for login, string.
+- **email**: User's email, unique.
+- **password_hash**: Stores the securely hashed password. Never store plain text passwords!
+- **first_name, last_name**: Optional fields for user's real name.
+- **created_at, updated_at**: Timestamps for tracking record creation and last update.
+
+```sql
+-- Create Users Table
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL, -- Store hashed passwords, never plain text!
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+_**tasks**_ Table:
+
+- **id**: Primary key, auto-incrementing.
+- **title**: Short title for the task.
+- **description**: Detailed description of the task.
+status: Current state of the task (e.g., 'pending', 'in_progress', 'completed').
+- **priority**: Urgency level of the task (e.g., 'low', 'medium', 'high').
+- **due_date**: When the task should be completed.
+- **assigned_to_user_id**: Foreign key referencing the users table, indicating who the task is assigned to. Can be NULL if unassigned.
+- **created_by_user_id**: Foreign key referencing the users table, indicating who created the task.
+- **created_at, updated_at**: Timestamps.
+
+```sql
+-- Create Tasks Table
+CREATE TABLE tasks (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    status VARCHAR(50) NOT NULL DEFAULT 'pending', -- e.g., 'pending', 'in_progress', 'completed', 'canceled'
+    priority VARCHAR(50) NOT NULL DEFAULT 'medium', -- e.g., 'low', 'medium', 'high', 'urgent'
+    due_date TIMESTAMP WITH TIME ZONE,
+    assigned_to_user_id INTEGER,
+    created_by_user_id INTEGER NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_assigned_to
+        FOREIGN KEY (assigned_to_user_id)
+        REFERENCES users(id)
+        ON DELETE SET NULL, -- If a user is deleted, their assigned tasks become unassigned
+    CONSTRAINT fk_created_by
+        FOREIGN KEY (created_by_user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE -- If a user is deleted, their created tasks are also deleted
+);
+```
+
+_**notifications**_ Table:
+
+- **id**: Primary key, auto-incrementing.
+- **user_id**: Foreign key referencing the users table, indicating who receives the notification.
+- **task_id**: Optional foreign key to associate the notification with a specific task.
+- **message**: The content of the notification.
+- **type**: Categorizes the notification (e.g., 'task_assigned', 'system_message').
+- **is_read**: Boolean flag to track if the user has seen the notification.
+- **created_at**: Timestamp.
+```sql
+-- Create Notifications Table
+CREATE TABLE notifications (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    task_id INTEGER, -- Optional, if notification is task-related
+    message TEXT NOT NULL,
+    type VARCHAR(50) NOT NULL, -- e.g., 'task_assigned', 'task_updated', 'system'
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_notification_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE, -- If a user is deleted, their notifications are also deleted
+    CONSTRAINT fk_notification_task
+        FOREIGN KEY (task_id)
+        REFERENCES tasks(id)
+        ON DELETE SET NULL -- If a task is deleted, notification task_id becomes NULL
+);
+```
+
+Add indexes for performance on foreign keys and frequently queried columns
+
+```sql
+CREATE INDEX idx_users_email ON users (email);
+CREATE INDEX idx_tasks_status ON tasks (status);
+CREATE INDEX idx_tasks_priority ON tasks (priority);
+CREATE INDEX idx_tasks_assigned_to_user_id ON tasks (assigned_to_user_id);
+CREATE INDEX idx_tasks_created_by_user_id ON tasks (created_by_user_id);
+CREATE INDEX idx_notifications_user_id ON notifications (user_id);
+CREATE INDEX idx_notifications_is_read ON notifications (is_read);
+```
+
+### Key features of the Schema:
+
+- Primary Keys (SERIAL PRIMARY KEY): Ensures each record has a unique identifier and automatically increments.
+
+- Foreign Keys (FOREIGN KEY ... REFERENCES ...): Establishes relationships between tables (tasks to users, notifications to users and tasks).
+
+- ON DELETE SET NULL: For assigned_to_user_id and notification.task_id, if the referenced user/task is deleted, the foreign key column is set to NULL.
+
+- ON DELETE CASCADE: For created_by_user_id and notification.user_id, if the referenced user is deleted, all their associated tasks/notifications are also deleted. Be careful with CASCADE!
+
+- Default Values (DEFAULT ...): Provides initial values for columns like status, priority, is_read, created_at, and updated_at.
+
+- NOT NULL Constraints: Ensures critical fields always have values.
+
+- UNIQUE Constraints: Guarantees no two users can have the same username or email.
+
+- Indexes (CREATE INDEX): Improves query performance on frequently searched or joined columns.
+
+- updated_at Trigger: Automatically updates the updated_at timestamp whenever a row is modified in users or tasks. This is super handy for tracking changes.
+
 ## Project setup
 
 ```bash
