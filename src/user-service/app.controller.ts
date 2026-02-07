@@ -21,27 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from '../src/user-service/app.module';
+import { Controller, Get } from '@nestjs/common';
+import { AppService } from './app.service';
 
-describe('AppController (e2e)', () => {
-  let app: INestApplication;
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) {}
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
-
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
-  });
-});
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
+}
