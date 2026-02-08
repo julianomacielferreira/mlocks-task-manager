@@ -21,3 +21,103 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+import { Injectable, NotFoundException, ConflictException, Inject } from '@nestjs/common';
+import { ClientProxy } from "@nestjs/microservices";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { User } from "./user.entity";
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import * as bcrypt from 'bcrypt'; // For password hashing
+
+@Injectable()
+export class UserService {
+
+    constructor(
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
+        @Inject("NOTIFICATION_SERVICE") private readonly client: ClientProxy // Inject RabbitMQ client
+    ) { }
+
+    async create(createUserDto: CreateUserDto): Promise<User> {
+
+        // Check if username or email already exists
+        const existingUser = await this.userRepository.findOne({
+            where: [{ username: createUserDto.username }, { email: createUserDto.email }],
+        });
+
+        if (existingUser && existingUser.username === createUserDto.username) {
+            throw new ConflictException('Username already taken.');
+        }
+
+        if (existingUser && existingUser.email === createUserDto.email) {
+            throw new ConflictException('Email already in use.');
+        }
+
+        // Hash the password before saving
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(createUserDto.password, saltRounds);
+
+        const newUser = this.userRepository.create({
+            ...createUserDto,
+            password: hashedPassword // Store the hashed password
+        });
+
+        await this.userRepository.save(newUser);
+
+        // Publish a 'user.created' event to RabbitMQ
+        this.client.emit("user.created", { id: newUser.id, username: newUser.username, email: newUser.email });
+
+        console.log(`User ${newUser.username} created. Emitted 'user.created' event.`);
+
+        return newUser;
+    }
+
+    async findAll(): Promise<User[]> {
+        return this.userRepository.find();
+    }
+
+    async findOne(id: number): Promise<User> {
+
+        const user = await this.userRepository.findOne({ where: { id } });
+
+        if (!user) {
+            throw new NotFoundException(`User with ID "${id}" not found.`);
+        }
+
+        return user;
+    }
+
+    async findByUsername(username: string): Promise<User | undefined> {
+        return this.userRepository.findOne({ where: { username } });
+    }
+
+    async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+
+        const user = await this.findOne(id); // Ensure user exists
+
+        if (!user) {
+            throw new NotFoundException("User not found");
+        }
+
+        // Hash new password if provided
+        if (updateUserDto.password) {
+            const saltRounds = 10;
+            updateUserDto.password = await bcrypt.hash(updateUserDto.password, saltRounds);
+        }
+
+        // Update user properties
+        Object.assign(user, updateUserDto);
+
+        return this.userRepository.save(user);
+    }
+
+    async remove(id: number): Promise<void> {
+
+        const result = await this.userRepository.delete(id);
+
+        if (result.affected === 0) {
+            throw new NotFoundException(`User with ID "${id}" not found.`);
+        }
+    }
+}
