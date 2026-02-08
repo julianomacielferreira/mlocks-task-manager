@@ -21,3 +21,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+import {
+    Controller,
+    Get,
+    Post,
+    Put,
+    Delete,
+    Body,
+    Param,
+    ParseIntPipe,
+    HttpCode,
+    HttpStatus,
+} from '@nestjs/common';
+import { UserService } from './user.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './user.entity';
+
+@Controller('users') // Base route path for this controller
+export class UserController {
+
+    constructor(private readonly userService: UserService) { }
+
+    @Post()
+    @HttpCode(HttpStatus.CREATED) // Explicitly set HTTP status to 201 Created
+    async create(@Body() createUserDto: CreateUserDto): Promise<User> {
+        return this.userService.create(createUserDto);
+    }
+
+    @Get()
+    async findAll(): Promise<User[]> {
+        return this.userService.findAll();
+    }
+
+    @Get(':id')
+    async findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
+        return this.userService.findOne(id);
+    }
+
+    @Put(':id')
+    async update(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() updateUserDto: UpdateUserDto,
+    ): Promise<User> {
+        return this.userService.update(id, updateUserDto);
+    }
+
+    @Delete(':id')
+    @HttpCode(HttpStatus.NO_CONTENT) // Explicitly set HTTP status to 204 No Content
+    async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+        await this.userService.remove(id);
+    }
+}
