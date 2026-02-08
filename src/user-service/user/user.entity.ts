@@ -22,35 +22,31 @@
  * THE SOFTWARE.
  */
 import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    CreateDateColumn,
-    UpdateDateColumn
-} from "typeorm";
-
-@Entity('users')
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+@Entity('users') // Specifies the table name in the database
 export class User {
-
-    @PrimaryGeneratedColumn()
-    id: number;
-
-    @Column({ unique: true, length: 50 })
-    name: string;
-
-    @Column({ unique: true, length: 100 })
-    email: string;
-
-    @Column({ name: "password_hash" })
-    password: string;
-
-    // It is possible to add a 'role' column for RBAC later
-    // @Column({ type: 'enum', enum: ['admin', 'user'], default: 'user' })
-    // role: string;
-
-    @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
-    createdAt: Date;
-
-    @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
-    updatedAt: Date;
-}   
+  @PrimaryGeneratedColumn()
+  id: number;
+  @Column({ unique: true, length: 50 })
+  username: string;
+  @Column({ unique: true, length: 100 })
+  email: string;
+  @Column({ name: 'password_hash' }) // Explicitly map to 'password_hash' column
+  password: string; // Store the hashed password here
+  @Column({ name: 'first_name', length: 50, nullable: true })
+  firstName: string;
+  @Column({ name: 'last_name', length: 50, nullable: true })
+  lastName: string;
+  // You might add a 'role' column for RBAC later
+  // @Column({ type: 'enum', enum: ['admin', 'user'], default: 'user' })
+  // role: string;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
+  createdAt: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
+  updatedAt: Date;
+} 
