@@ -4,9 +4,9 @@ services:
     image: postgres:15
     container_name: mlocks_task_manager_postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mlocks_task_manager
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
     ports:
       - "5432:5432"
     volumes:
@@ -25,10 +25,6 @@ services:
       - "15672:15672"
     volumes:
       - rabbitmqdata:/var/lib/rabbitmq
-      - ./config/rabbitmq.config:/etc/rabbitmq/rabbitmq.config
-      - ./config/definitions.json:/etc/rabbitmq/definitions.json
-      - ./config/init-rabbitmq.sh:/usr/local/bin/init-rabbitmq.sh
-    command: sh /usr/local/bin/init-rabbitmq.sh
     networks:
       - mlocks_bridge
 
@@ -36,15 +32,15 @@ services:
     build: .
     container_name: mlocks_task_manager_user_service
     environment:
-        DATABASE_HOST: postgres
-        DATABASE_PORT: 5432
-        DATABASE_USER: postgres
-        DATABASE_PASSWORD: password
-        DATABASE_NAME: mlocks_task_manager
-        RABBITMQ_HOST: rabbitmq
-        RABBITMQ_PORT: 5672
-        RABBITMQ_USER: guest
-        RABBITMQ_PASS: guest
+        DATABASE_HOST: ${DATABASE_HOST}
+        DATABASE_PORT: ${DATABASE_PORT}
+        DATABASE_USER: ${DATABASE_USER}
+        DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+        DATABASE_NAME: ${DATABASE_NAME}
+        RABBITMQ_HOST: ${RABBITMQ_HOST}
+        RABBITMQ_PORT: ${RABBITMQ_PORT}
+        RABBITMQ_USER: ${RABBITMQ_USER}
+        RABBITMQ_PASS: ${RABBITMQ_PASS}
     depends_on:
       - postgres
       - rabbitmq
@@ -61,15 +57,15 @@ services:
     build: .
     container_name: mlocks_task_manager_task_service
     environment:
-        DATABASE_HOST: postgres
-        DATABASE_PORT: 5432
-        DATABASE_USER: postgres
-        DATABASE_PASSWORD: password
-        DATABASE_NAME: mlocks_task_manager
-        RABBITMQ_HOST: rabbitmq
-        RABBITMQ_PORT: 5672
-        RABBITMQ_USER: guest
-        RABBITMQ_PASS: guest
+        DATABASE_HOST: ${DATABASE_HOST}
+        DATABASE_PORT: ${DATABASE_PORT}
+        DATABASE_USER: ${DATABASE_USER}
+        DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+        DATABASE_NAME: ${DATABASE_NAME}
+        RABBITMQ_HOST: ${RABBITMQ_HOST}
+        RABBITMQ_PORT: ${RABBITMQ_PORT}
+        RABBITMQ_USER: ${RABBITMQ_USER}
+        RABBITMQ_PASS: ${RABBITMQ_PASS}
     depends_on:
       - postgres
       - rabbitmq
@@ -86,15 +82,15 @@ services:
     build: .
     container_name: mlocks_task_manager_notification_service
     environment:
-        DATABASE_HOST: postgres
-        DATABASE_PORT: 5432
-        DATABASE_USER: postgres
-        DATABASE_PASSWORD: password
-        DATABASE_NAME: mlocks_task_manager
-        RABBITMQ_HOST: rabbitmq
-        RABBITMQ_PORT: 5672
-        RABBITMQ_USER: guest
-        RABBITMQ_PASS: guest
+        DATABASE_HOST: ${DATABASE_HOST}
+        DATABASE_PORT: ${DATABASE_PORT}
+        DATABASE_USER: ${DATABASE_USER}
+        DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+        DATABASE_NAME: ${DATABASE_NAME}
+        RABBITMQ_HOST: ${RABBITMQ_HOST}
+        RABBITMQ_PORT: ${RABBITMQ_PORT}
+        RABBITMQ_USER: ${RABBITMQ_USER}
+        RABBITMQ_PASS: ${RABBITMQ_PASS}
     depends_on:
       - postgres
       - rabbitmq
