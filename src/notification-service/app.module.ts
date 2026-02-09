@@ -24,12 +24,44 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { NotificationController } from './notification/notification.controller';
+import { NotificationService } from './notification/notification.service';
+import { Notification } from './notification/notification.entity';
+
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, // Make config available globally in the application
+    }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+
+        const host = configService.get<string>('DATABASE_HOST');
+        const port = configService.get<number>('DATABASE_PORT');
+        const username = configService.get<string>('DATABASE_USER');
+        const password = configService.get<string>('DATABASE_PASSWORD');
+        const database = configService.get<string>('DATABASE_NAME');
+
+        return {
+          type: 'postgres',
+          host,
+          port,
+          username,
+          password,
+          database,
+          entities: [Notification], // Register entities to be synced
+          synchronize: true, // WARNING: Not recommended for production! Creates/updates schema automatically
+        };
+      },
+    }),
+
+    // Register the Notification entity for dependency injection
+    TypeOrmModule.forFeature([Notification]),
+  ],
+
+  controllers: [NotificationController],
+  providers: [NotificationService],
 })
-export class AppModule {}
+export class AppModule { }

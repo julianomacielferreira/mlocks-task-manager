@@ -21,3 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+import { Controller, Logger } from '@nestjs/common';
+import { EventPattern } from '@nestjs/microservices';
+import { NotificationService } from './notification.service';
+
+@Controller()
+export class NotificationController {
+
+    private readonly logger = new Logger(NotificationController.name);
+
+    constructor(private readonly notificationService: NotificationService) { }
+
+    @EventPattern('user.created') // Listens for 'user.created' events
+    async handleUserCreated(data: { userId: number; email: string; username: string }) {
+        this.logger.log(`Received user.created event for user: ${data.username}`);
+        // Here, you would call your actual notification logic
+        await this.notificationService.sendWelcomeEmail(data.email, data.username);
+        await this.notificationService.createNotification(data.userId, 'welcome', `Welcome, ${data.username}!`);
+    }
+
+    @EventPattern('task.assigned') // Listens for 'task.assigned' events
+    async handleTaskAssigned(data: { taskId: number; assignedToUserId: number; taskTitle: string }) {
+        this.logger.log(`Received task.assigned event for task: ${data.taskTitle}`);
+        // Logic to notify the assigned user
+        await this.notificationService.createNotification(data.assignedToUserId, 'task_assigned', `Task "${data.taskTitle}" assigned to you.`);
+    }
+
+    @EventPattern('task.updated') // Listens for 'task.updated' events
+    async handleTaskUpdated(data: { taskId: number; userId: number; taskTitle: string; newStatus: string }) {
+        this.logger.log(`Received task.updated event for task: ${data.taskTitle}`);
+        // Logic to notify relevant parties
+        await this.notificationService.createNotification(data.userId, 'task_updated', `Task "${data.taskTitle}" status changed to ${data.newStatus}.`);
+    }
+}
