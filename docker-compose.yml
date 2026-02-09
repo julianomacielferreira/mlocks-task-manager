@@ -11,6 +11,8 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - mlocks_bridge
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -23,6 +25,12 @@ services:
       - "15672:15672"
     volumes:
       - rabbitmqdata:/var/lib/rabbitmq
+      - ./config/rabbitmq.config:/etc/rabbitmq/rabbitmq.config
+      - ./config/definitions.json:/etc/rabbitmq/definitions.json
+      - ./config/init-rabbitmq.sh:/usr/local/bin/init-rabbitmq.sh
+    command: sh /usr/local/bin/init-rabbitmq.sh
+    networks:
+      - mlocks_bridge
 
   user-service:
     build: .
@@ -46,6 +54,8 @@ services:
       - ./src/user-service:/app/src
       - ./package.json:/app/package.json
     command: npm run start:dev
+    networks:
+      - mlocks_bridge
 
   task-service:
     build: .
@@ -69,6 +79,8 @@ services:
       - ./src/task-service:/app/src
       - ./package.json:/app/package.json
     command: npm run start:dev
+    networks:
+      - mlocks_bridge
 
   notification-service:
     build: .
@@ -92,7 +104,13 @@ services:
       - ./src/notification-service:/app/src
       - ./package.json:/app/package.json
     command: npm run start:dev
+    networks:
+      - mlocks_bridge
       
+networks:
+  mlocks_bridge:
+    driver: bridge
+    
 volumes:
   pgdata:
   rabbitmqdata:
