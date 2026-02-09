@@ -24,8 +24,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt'; // For password hashing
 import { CreateUserDTO } from '../user/dto/create-user.dto';
+import * as argon2 from "argon2";
 
 @Injectable()
 export class AuthService {
@@ -39,7 +39,7 @@ export class AuthService {
 
         const user = await this.userService.findByUsername(username);
 
-        if (user && await bcrypt.compare(pass, user.password)) { // Compare hashed passwords
+        if (user && await argon2.verify(user.password, pass)) { // Compare hashed passwords
             const { password, ...result } = user;
             return result;
         }

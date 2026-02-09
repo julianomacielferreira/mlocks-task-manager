@@ -24,12 +24,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common'; // For DTO validation
-// import * as nodeCrypto from 'crypto';
-
-// // Ensure a `crypto` global exists (some libs expect Web Crypto API on global).
-// if (!(globalThis as any).crypto) {
-//   (globalThis as any).crypto = (nodeCrypto as any).webcrypto || nodeCrypto;
-// }
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

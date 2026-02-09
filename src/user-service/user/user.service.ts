@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Injectable, NotFoundException, ConflictException, Inject } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, Inject, InternalServerErrorException } from '@nestjs/common';
 import { ClientProxy } from "@nestjs/microservices";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "./user.entity";
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
-import * as bcrypt from 'bcrypt'; // For password hashing
+import * as argon2 from "argon2";
 
 @Injectable()
 export class UserService {
@@ -55,8 +55,7 @@ export class UserService {
         }
 
         // Hash the password before saving
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(createUserDto.password, saltRounds);
+        const hashedPassword = await argon2.hash(createUserDto.password);
 
         const newUser = this.userRepository.create({
             ...createUserDto,
@@ -68,7 +67,7 @@ export class UserService {
         // Publish a 'user.created' event to RabbitMQ
         this.client.emit("user.created", { id: newUser.id, username: newUser.username, email: newUser.email });
 
-        console.log(`User ${newUser.username} created. Emitted 'user.created' event.`);
+        console.log(`User ${newUser.username} created.Emitted 'user.created' event.`);
 
         return newUser;
     }
@@ -102,8 +101,7 @@ export class UserService {
 
         // Hash new password if provided
         if (updateUserDto.password) {
-            const saltRounds = 10;
-            updateUserDto.password = await bcrypt.hash(updateUserDto.password, saltRounds);
+            updateUserDto.password = await argon2.hash(updateUserDto.password);
         }
 
         // Update user properties
