@@ -32,7 +32,7 @@ services:
         DATABASE_PORT: 5432
         DATABASE_USER: postgres
         DATABASE_PASSWORD: password
-        DATABASE_NAME: task_manager
+        DATABASE_NAME: mlocks_task_manager
         RABBITMQ_HOST: rabbitmq
         RABBITMQ_PORT: 5672
         RABBITMQ_USER: guest
@@ -55,7 +55,7 @@ services:
         DATABASE_PORT: 5432
         DATABASE_USER: postgres
         DATABASE_PASSWORD: password
-        DATABASE_NAME: task_manager
+        DATABASE_NAME: mlocks_task_manager
         RABBITMQ_HOST: rabbitmq
         RABBITMQ_PORT: 5672
         RABBITMQ_USER: guest
@@ -74,11 +74,17 @@ services:
     build: .
     container_name: mlocks_task_manager_notification_service
     environment:
+        DATABASE_HOST: postgres
+        DATABASE_PORT: 5432
+        DATABASE_USER: postgres
+        DATABASE_PASSWORD: password
+        DATABASE_NAME: mlocks_task_manager
         RABBITMQ_HOST: rabbitmq
         RABBITMQ_PORT: 5672
         RABBITMQ_USER: guest
         RABBITMQ_PASS: guest
     depends_on:
+      - postgres
       - rabbitmq
     ports:
       - "3002:3000"
