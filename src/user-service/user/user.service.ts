@@ -26,8 +26,8 @@ import { ClientProxy } from "@nestjs/microservices";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "./user.entity";
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDTO } from './dto/create-user.dto';
+import { UpdateUserDTO } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt'; // For password hashing
 
 @Injectable()
@@ -39,7 +39,7 @@ export class UserService {
         @Inject("NOTIFICATION_SERVICE") private readonly client: ClientProxy // Inject RabbitMQ client
     ) { }
 
-    async create(createUserDto: CreateUserDto): Promise<User> {
+    async create(createUserDto: CreateUserDTO): Promise<User> {
 
         // Check if username or email already exists
         const existingUser = await this.userRepository.findOne({
@@ -92,7 +92,7 @@ export class UserService {
         return this.userRepository.findOne({ where: { username } });
     }
 
-    async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    async update(id: number, updateUserDto: UpdateUserDTO): Promise<User> {
 
         const user = await this.findOne(id); // Ensure user exists
 

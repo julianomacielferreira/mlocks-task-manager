@@ -23,9 +23,25 @@
  */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common'; // For DTO validation
+// import * as nodeCrypto from 'crypto';
+
+// // Ensure a `crypto` global exists (some libs expect Web Crypto API on global).
+// if (!(globalThis as any).crypto) {
+//   (globalThis as any).crypto = (nodeCrypto as any).webcrypto || nodeCrypto;
+// }
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 3000);
+  // Enable global validation for incoming DTOs
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true, // Strips away properties that are not defined in the DTO
+    forbidNonWhitelisted: true, // Throws an error if non-whitelisted properties are sent
+    transform: true, // Automatically transforms payload objects to DTO instances
+  }));
+  // Listen on port 3000 (or from environment variable)
+  const port = process.env.PORT || 3000;
+  await app.listen(port);
+  console.log(`User Service running on port ${port}`);
 }
 bootstrap();

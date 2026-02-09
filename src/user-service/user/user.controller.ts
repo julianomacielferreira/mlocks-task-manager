@@ -34,8 +34,8 @@ import {
     HttpStatus,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDTO } from './dto/create-user.dto';
+import { UpdateUserDTO } from './dto/update-user.dto';
 import { User } from './user.entity';
 
 @Controller('users') // Base route path for this controller
@@ -45,7 +45,7 @@ export class UserController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED) // Explicitly set HTTP status to 201 Created
-    async create(@Body() createUserDto: CreateUserDto): Promise<User> {
+    async create(@Body() createUserDto: CreateUserDTO): Promise<User> {
         return this.userService.create(createUserDto);
     }
 
@@ -62,7 +62,7 @@ export class UserController {
     @Put(':id')
     async update(
         @Param('id', ParseIntPipe) id: number,
-        @Body() updateUserDto: UpdateUserDto,
+        @Body() updateUserDto: UpdateUserDTO,
     ): Promise<User> {
         return this.userService.update(id, updateUserDto);
     }

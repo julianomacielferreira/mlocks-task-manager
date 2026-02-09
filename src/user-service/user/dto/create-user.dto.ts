@@ -23,7 +23,8 @@
  */
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
-export class CreateUserDto {
+export class CreateUserDTO {
+
     @IsString()
     @IsNotEmpty()
     @MinLength(3, { message: 'Username must be at least 3 characters long.' })
