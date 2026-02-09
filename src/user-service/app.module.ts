@@ -48,23 +48,6 @@ import { User } from './user/user.entity';
       }),
       inject: [ConfigService], // Inject ConfigService into the factory
     }),
-    ClientsModule.registerAsync([
-      {
-        name: 'NOTIFICATION_SERVICE',
-        imports: [ConfigModule],
-        useFactory: (configService: ConfigService) => ({
-          transport: Transport.RMQ,
-          options: {
-            urls: [`amqp://${configService.get('RABBITMQ_USER')}:${configService.get('RABBITMQ_PASS')}@${configService.get('RABBITMQ_HOST')}:${configService.get('RABBITMQ_PORT')}`],
-            queue: 'user_events_queue', // This is the queue the producer sends messages to (it will be created if it doesn't exist)
-            queueOptions: {
-              durable: false, // Messages in this queue are not persisted
-            },
-          },
-        }),
-        inject: [ConfigService],
-      },
-    ]),
     UserModule,
     AuthModule,
   ],

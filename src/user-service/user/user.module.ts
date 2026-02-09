@@ -26,9 +26,32 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { User } from './user.entity';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([User])], // Register the User entity with TypeORM for this module
+    imports: [
+        TypeOrmModule.forFeature([User]),  // Register the User entity with TypeORM for this module
+        ClientsModule.registerAsync([
+            {
+                name: 'NOTIFICATION_SERVICE', // A token to inject the client
+                imports: [ConfigModule],
+                useFactory: (configService: ConfigService) => ({
+                    transport: Transport.RMQ,
+                    options: {
+                        urls: [`amqp://${configService.get('RABBITMQ_USER')}:${configService.get('RABBITMQ_PASS')}@${configService.get('RABBITMQ_HOST')}:${configService.get('RABBITMQ_PORT')}`],
+                        queue: 'user_events_queue', // This is the queue the producer sends messages to (it will be created if it doesn't exist)
+                        queueOptions: {
+                            durable: false, // Messages in this queue are not persisted
+                        },
+                        // For a producer, typically you don't need to specify a prefetchCount or noAck.
+                        // These are more for consumers.
+                    },
+                }),
+                inject: [ConfigService],
+            },
+        ]),
+    ],
     controllers: [UserController],
     providers: [UserService],
     exports: [UserService], // Export UserService if other modules need to use it
