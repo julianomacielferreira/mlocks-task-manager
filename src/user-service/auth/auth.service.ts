@@ -21,3 +21,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { UserService } from '../user/user.service';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt'; // For password hashing
+import { CreateUserDTO } from '../user/dto/create-user.dto';
+
+@Injectable()
+export class AuthService {
+
+    constructor(
+        private userService: UserService,
+        private jwtService: JwtService,
+    ) { }
+
+    async validateUser(username: string, pass: string): Promise<any> {
+
+        const user = await this.userService.findByUsername(username);
+
+        if (user && await bcrypt.compare(pass, user.password)) { // Compare hashed passwords
+            const { password, ...result } = user;
+            return result;
+        }
+
+        return null;
+    }
+
+    async login(user: any) {
+
+        const payload = { username: user.username, sub: user.id };
+
+        return {
+            access_token: this.jwtService.sign(payload),
+        };
+    }
+
+    // Build the CreateUserDTO inside the method from a plain payload.
+    // `UserService.create` will hash the password, so pass the raw password.
+    async register(payload: { username: string; password: string; email: string; firstName: string; lastName: string; }): Promise<any> {
+
+        const createUserDto: CreateUserDTO = {
+            username: payload.username,
+            email: payload.email,
+            password: payload.password,
+            firstName: payload.firstName,
+            lastName: payload.lastName,
+        };
+
+        const newUser = await this.userService.create(createUserDto);
+        return this.login(newUser);
+    }
+}

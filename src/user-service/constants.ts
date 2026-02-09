@@ -21,32 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthGuard } from '@nestjs/passport';
-import { LoginDTO } from './dto/login.dto';
-
-@Controller('auth')
-export class AuthController {
-
-    constructor(private authService: AuthService) { }
-
-    @Post('login')
-    async login(@Body() loginDto: LoginDTO) {
-
-        const user = await this.authService.validateUser(loginDto.username, loginDto.password);
-
-        if (!user) {
-            // You might want to throw an UnauthorizedException here instead of returning null
-            return { message: 'Invalid credentials' };
-        }
-
-        return this.authService.login(user);
-    }
-
-    @UseGuards(AuthGuard('jwt'))
-    @Post('profile')
-    getProfile(@Request() req) {
-        return req.user;
-    }
-}
+export const JwtConstants = {
+  secret: 'm8VdyI4kBNEvOpIF4H8IpdAqdxRVSbu6DR1JWATndAy', // Replace with a strong, environment-variable-loaded secret in production
+};

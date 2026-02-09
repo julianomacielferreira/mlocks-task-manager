@@ -21,3 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+import { IsString, IsNotEmpty, MinLength } from 'class-validator';
+
+export class LoginDTO {
+
+    @IsString()
+    @IsNotEmpty()
+    username: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @MinLength(6) // Example: minimum password length
+    password: string;
+}

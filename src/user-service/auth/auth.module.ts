@@ -21,3 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+import { Module } from '@nestjs/common';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
+import { UserModule } from '../user/user.module';
+import { JwtConstants } from '../constants';
+import { JwtStrategy } from './jwt.strategy';
+
+@Module({
+    imports: [
+        UserModule,
+        PassportModule,
+        JwtModule.register({
+            secret: JwtConstants.secret, // Replace with a strong, environment-variable-loaded secret in production
+            signOptions: { expiresIn: '1h' }, // Token expiration time
+        }),
+    ],
+    controllers: [AuthController],
+    providers: [AuthService, JwtStrategy],
+    exports: [AuthService], // Export AuthService if other modules need to use it
+})
+export class AuthModule { }
