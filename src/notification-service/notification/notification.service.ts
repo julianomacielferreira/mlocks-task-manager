@@ -27,19 +27,7 @@ import { Repository } from 'typeorm';
 import { Notification } from './notification.entity';
 import * as nodemailer from 'nodemailer';
 
-/**
- * NotificationService
- * 
- * This service handles all notification-related operations including:
- * - Creating and storing notifications in the database
- * - Sending email notifications to users
- * - Managing notification status (read/unread)
- * - Retrieving notifications for specific users
- * - Deleting notifications
- * 
- * The service used by both the microservice event handlers and potential API endpoints
- * to ensure consistent notification handling across the application.
- */
+
 @Injectable()
 export class NotificationService {
   private readonly logger = new Logger(NotificationService.name);
@@ -47,34 +35,10 @@ export class NotificationService {
   constructor(
     @InjectRepository(Notification)
     private readonly notificationRepository: Repository<Notification>,
-  ) {}
+  ) { }
 
-  /**
-   * Creates and stores a notification in the database
-   * 
-   * This method is called whenever an event occurs that should trigger a notification.
-   * It saves the notification details to the database with the user as the recipient.
-   * 
-   * @param userId - The ID of the user who will receive the notification
-   * @param type - The type/category of notification (e.g., 'welcome', 'task_assigned', 'task_updated')
-   * @param message - The notification message content that will be displayed to the user
-   * @param taskId - Optional task ID if the notification is task-related
-   * @returns The created Notification entity with all fields populated
-   * 
-   * @example
-   * await this.notificationService.createNotification(
-   *   123,
-   *   'task_assigned',
-   *   'Task "Review Documentation" has been assigned to you.',
-   *   456
-   * );
-   */
-  async createNotification(
-    userId: number,
-    type: string,
-    message: string,
-    taskId?: number,
-  ): Promise<Notification> {
+  public async createNotification(userId: number, type: string, message: string, taskId?: number): Promise<Notification> {
+
     try {
       // Create a new Notification entity instance
       const notification = this.notificationRepository.create({
@@ -104,26 +68,8 @@ export class NotificationService {
     }
   }
 
-  /**
-   * Sends a welcome email to a newly registered user
-   * 
-   * This method is triggered when a new user joins the application. It performs two actions:
-   * 1. Sends an email with welcome message and account information
-   * 2. Creates a welcome notification in the system
-   * 
-   * Note: For now, this logs email sending (useful for development/testing).
-   * In production, integrate with an email service (e.g., SendGrid, Brevo, SMTP).
-   * 
-   * @param email - The email address of the user to send the welcome email to
-   * @param username - The username of the newly registered user
-   * 
-   * @example
-   * await this.notificationService.sendWelcomeEmail(
-   *   'john@example.com',
-   *   'johndoe'
-   * );
-   */
-  async sendWelcomeEmail(email: string, username: string): Promise<void> {
+  public async sendWelcomeEmail(email: string, username: string): Promise<void> {
+
     try {
       // Email content for the welcome message
       const emailSubject = 'Welcome to Task Manager!';
@@ -170,20 +116,8 @@ export class NotificationService {
     }
   }
 
-  /**
-   * Retrieves all notifications for a specific user
-   * 
-   * Fetches all notifications belonging to a user, ordered from newest to oldest.
-   * This is useful for displaying a notification history or timeline to the user.
-   * 
-   * @param userId - The ID of the user whose notifications to retrieve
-   * @returns Array of Notification entities for the specified user
-   * 
-   * @example
-   * const notifications = await this.notificationService.getNotificationsByUserId(123);
-   * console.log(`User has ${notifications.length} notifications`);
-   */
-  async getNotificationsByUserId(userId: number): Promise<Notification[]> {
+  public async getNotificationsByUserId(userId: number): Promise<Notification[]> {
+
     try {
       const notifications = await this.notificationRepository.find({
         where: { userId },
@@ -204,22 +138,8 @@ export class NotificationService {
     }
   }
 
-  /**
-   * Retrieves unread notifications for a specific user
-   * 
-   * Fetches only unread notifications for a user. This is useful for:
-   * - Showing notification badges/counters
-   * - Displaying only new notifications to the user
-   * - Implementing notification centers
-   * 
-   * @param userId - The ID of the user whose unread notifications to retrieve
-   * @returns Array of unread Notification entities for the specified user
-   * 
-   * @example
-   * const unreadCount = await this.notificationService.getUnreadNotifications(123);
-   * console.log(`User has ${unreadCount.length} unread notifications`);
-   */
-  async getUnreadNotifications(userId: number): Promise<Notification[]> {
+  public async getUnreadNotifications(userId: number): Promise<Notification[]> {
+
     try {
       const notifications = await this.notificationRepository.find({
         where: { userId, isRead: false },
@@ -240,22 +160,8 @@ export class NotificationService {
     }
   }
 
-  /**
-   * Marks a specific notification as read
-   * 
-   * Updates a notification's read status to true. This is called when a user
-   * views or acknowledges a notification. Useful for:
-   * - Updating notification UI (removing unread indicators)
-   * - Tracking user engagement
-   * - Cleaning up notification badges
-   * 
-   * @param notificationId - The ID of the notification to mark as read
-   * @returns The updated Notification entity
-   * 
-   * @example
-   * await this.notificationService.markAsRead(456);
-   */
-  async markAsRead(notificationId: number): Promise<Notification> {
+  public async markAsRead(notificationId: number): Promise<Notification> {
+
     try {
       // Find the notification by ID
       const notification = await this.notificationRepository.findOne({
@@ -285,23 +191,8 @@ export class NotificationService {
     }
   }
 
-  /**
-   * Marks all notifications for a user as read
-   * 
-   * Updates all unread notifications for a specific user to read status.
-   * This is useful for:
-   * - Clearing notification badges
-   * - "Mark all as read" functionality
-   * - Bulk notification management
-   * 
-   * @param userId - The ID of the user whose notifications should be marked as read
-   * @returns The count of notifications that were updated
-   * 
-   * @example
-   * const count = await this.notificationService.markAllAsRead(123);
-   * console.log(`Marked ${count} notifications as read`);
-   */
-  async markAllAsRead(userId: number): Promise<number> {
+  public async markAllAsRead(userId: number): Promise<number> {
+
     try {
       const result = await this.notificationRepository.update(
         { userId, isRead: false },
@@ -322,22 +213,8 @@ export class NotificationService {
     }
   }
 
-  /**
-   * Deletes a specific notification
-   * 
-   * Removes a notification from the database. This is useful for:
-   * - User-initiated deletion action
-   * - Cleaning up old/obsolete notifications
-   * - Managing notification storage
-   * 
-   * @param notificationId - The ID of the notification to delete
-   * @returns Boolean indicating whether the deletion was successful
-   * 
-   * @example
-   * const success = await this.notificationService.deleteNotification(456);
-   * if (success) console.log('Notification deleted');
-   */
-  async deleteNotification(notificationId: number): Promise<boolean> {
+  public async deleteNotification(notificationId: number): Promise<boolean> {
+
     try {
       const result = await this.notificationRepository.delete(notificationId);
 
@@ -358,20 +235,8 @@ export class NotificationService {
     }
   }
 
-  /**
-   * Deletes all notifications for a user (optional cleanup method)
-   * 
-   * Removes all notifications for a specific user from the database.
-   * Use with caution as this is a destructive operation.
-   * 
-   * @param userId - The ID of the user whose notifications should be deleted
-   * @returns The count of notifications that were deleted
-   * 
-   * @example
-   * const count = await this.notificationService.deleteUserNotifications(123);
-   * console.log(`Deleted ${count} notifications`);
-   */
-  async deleteUserNotifications(userId: number): Promise<number> {
+  public async deleteUserNotifications(userId: number): Promise<number> {
+
     try {
       const result = await this.notificationRepository.delete({ userId });
 
@@ -389,19 +254,8 @@ export class NotificationService {
     }
   }
 
-  /**
-   * Gets unread notification count for a user
-   * 
-   * Returns the count of unread notifications for displaying badge notifications.
-   * 
-   * @param userId - The ID of the user
-   * @returns The count of unread notifications
-   * 
-   * @example
-   * const count = await this.notificationService.getUnreadCount(123);
-   * console.log(`User has ${count} unread notifications`);
-   */
-  async getUnreadCount(userId: number): Promise<number> {
+  public async getUnreadCount(userId: number): Promise<number> {
+
     try {
       const count = await this.notificationRepository.count({
         where: { userId, isRead: false },

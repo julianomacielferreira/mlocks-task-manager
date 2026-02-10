@@ -39,7 +39,7 @@ export class UserService {
         @Inject("NOTIFICATION_SERVICE") private readonly client: ClientProxy // Inject RabbitMQ client
     ) { }
 
-    async create(createUserDto: CreateUserDTO): Promise<User> {
+    public async create(createUserDto: CreateUserDTO): Promise<User> {
 
         // Check if username or email already exists
         const existingUser = await this.userRepository.findOne({
@@ -72,7 +72,7 @@ export class UserService {
         return newUser;
     }
 
-    async findAll(): Promise<User[]> {
+    public async findAll(): Promise<User[]> {
         return this.userRepository.find();
     }
 
@@ -87,11 +87,11 @@ export class UserService {
         return user;
     }
 
-    async findByUsername(username: string): Promise<User | undefined> {
+    public async findByUsername(username: string): Promise<User | undefined> {
         return this.userRepository.findOne({ where: { username } });
     }
 
-    async update(id: number, updateUserDto: UpdateUserDTO): Promise<User> {
+    public async update(id: number, updateUserDto: UpdateUserDTO): Promise<User> {
 
         const user = await this.findOne(id); // Ensure user exists
 
@@ -110,7 +110,7 @@ export class UserService {
         return this.userRepository.save(user);
     }
 
-    async remove(id: number): Promise<void> {
+    public async remove(id: number): Promise<void> {
 
         const result = await this.userRepository.delete(id);
 

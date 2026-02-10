@@ -45,12 +45,12 @@ export class UserController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED) // Explicitly set HTTP status to 201 Created
-    async create(@Body() createUserDto: CreateUserDTO): Promise<User> {
+    public async create(@Body() createUserDto: CreateUserDTO): Promise<User> {
         return this.userService.create(createUserDto);
     }
 
     @Get()
-    async findAll(): Promise<User[]> {
+    public async findAll(): Promise<User[]> {
         return this.userService.findAll();
     }
 
@@ -60,16 +60,13 @@ export class UserController {
     }
 
     @Put(':id')
-    async update(
-        @Param('id', ParseIntPipe) id: number,
-        @Body() updateUserDto: UpdateUserDTO,
-    ): Promise<User> {
+    public async update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDTO): Promise<User> {
         return this.userService.update(id, updateUserDto);
     }
 
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT) // Explicitly set HTTP status to 204 No Content
-    async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    public async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
         await this.userService.remove(id);
     }
 }

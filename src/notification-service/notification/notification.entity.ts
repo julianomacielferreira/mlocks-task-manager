@@ -49,6 +49,7 @@ import {
 @Index('idx_notifications_user_id', ['userId'])
 @Index('idx_notifications_is_read', ['isRead'])
 export class Notification {
+
   @PrimaryGeneratedColumn()
   id: number;
 

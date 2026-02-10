@@ -37,7 +37,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         });
     }
 
-    async validate(payload: any) {
+    public async validate(payload: any) {
         // This payload is the one signed by JwtService.sign()
         // You can fetch the user from the database here if needed.
         return { userId: payload.sub, username: payload.username };

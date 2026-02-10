@@ -35,7 +35,7 @@ export class AuthService {
         private jwtService: JwtService,
     ) { }
 
-    async validateUser(username: string, pass: string): Promise<any> {
+    public async validateUser(username: string, pass: string): Promise<any> {
 
         const user = await this.userService.findByUsername(username);
 
@@ -47,7 +47,7 @@ export class AuthService {
         return null;
     }
 
-    async login(user: any) {
+    public async login(user: any) {
 
         const payload = { username: user.username, sub: user.id };
 
@@ -58,7 +58,7 @@ export class AuthService {
 
     // Build the CreateUserDTO inside the method from a plain payload.
     // `UserService.create` will hash the password, so pass the raw password.
-    async register(payload: { username: string; password: string; email: string; firstName: string; lastName: string; }): Promise<any> {
+    public async register(payload: { username: string; password: string; email: string; firstName: string; lastName: string; }): Promise<any> {
 
         const createUserDto: CreateUserDTO = {
             username: payload.username,

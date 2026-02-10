@@ -32,7 +32,7 @@ export class AuthController {
     constructor(private authService: AuthService) { }
 
     @Post('login')
-    async login(@Body() loginDto: LoginDTO) {
+    public async login(@Body() loginDto: LoginDTO) {
 
         const user = await this.authService.validateUser(loginDto.username, loginDto.password);
 
@@ -46,7 +46,7 @@ export class AuthController {
 
     @UseGuards(AuthGuard('jwt'))
     @Post('profile')
-    getProfile(@Request() req) {
+    public getProfile(@Request() req) {
         return req.user;
     }
 }
