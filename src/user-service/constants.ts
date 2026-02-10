@@ -21,6 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+import { config } from 'dotenv';
+
+config(); // Load .env variables
+
+if (!process.env.JWT_SECRET) {
+  throw new Error('Missing JWT_SECRET environment variable. Set it in .env or in the environment.');
+}
+
 export const JwtConstants = {
-  secret: 'm8VdyI4kBNEvOpIF4H8IpdAqdxRVSbu6DR1JWATndAy', // Replace with a strong, environment-variable-loaded secret in production
+  secret: process.env.JWT_SECRET, // Use the environment variable-loaded secret
 };
