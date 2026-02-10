@@ -37,10 +37,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
                 name: 'NOTIFICATION_SERVICE', // A token to inject the client
                 imports: [ConfigModule],
                 useFactory: (configService: ConfigService) => ({
-                    transport: Transport.RMQ,
+                    transport: Transport.RMQ as const,
                     options: {
                         urls: [`amqp://${configService.get('RABBITMQ_USER')}:${configService.get('RABBITMQ_PASS')}@${configService.get('RABBITMQ_HOST')}:${configService.get('RABBITMQ_PORT')}`],
-                        queue: 'user_queue', // This is the queue the producer sends messages to (it will be created if it doesn't exist)
+                        queue: 'notification_queue', // This is the queue the producer sends messages to (it will be created if it doesn't exist)
                         queueOptions: {
                             durable: true, // Messages in this queue are not persisted
                         },

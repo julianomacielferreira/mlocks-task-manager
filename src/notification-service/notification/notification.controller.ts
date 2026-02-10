@@ -33,11 +33,11 @@ export class NotificationController {
     constructor(private readonly notificationService: NotificationService) { }
 
     @EventPattern('user.created') // Listens for 'user.created' events
-    async handleUserCreated(data: { userId: number; email: string; username: string }) {
+    async handleUserCreated(data: { id: number; email: string; username: string }) {
         this.logger.log(`Received user.created event for user: ${data.username}`);
         // Here, you would call your actual notification logic
         await this.notificationService.sendWelcomeEmail(data.email, data.username);
-        await this.notificationService.createNotification(data.userId, 'welcome', `Welcome, ${data.username}!`);
+        await this.notificationService.createNotification(data.id, 'welcome', `Welcome, ${data.username}!`);
     }
 
     @EventPattern('task.assigned') // Listens for 'task.assigned' events

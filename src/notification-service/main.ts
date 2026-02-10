@@ -37,7 +37,7 @@ async function bootstrap() {
         urls: [`amqp://${configService.get('RABBITMQ_USER')}:${configService.get('RABBITMQ_PASS')}@${configService.get('RABBITMQ_HOST')}:${configService.get('RABBITMQ_PORT')}`],
         queue: 'notification_queue', // This service listens on 'notification_queue'
         queueOptions: {
-          durable: false,
+          durable: true,
         },
         // Optional: Control message processing
         // prefetchCount: 1, // Process only one message at a time per consumer
