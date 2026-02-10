@@ -25,6 +25,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Notification } from './notification.entity';
+import * as nodemailer from 'nodemailer';
 
 /**
  * NotificationService
@@ -144,15 +145,20 @@ export class NotificationService {
       );
       this.logger.debug(`Email Subject: ${emailSubject}`);
 
-      // TODO: Integrate with email service provider (SendGrid, Brevo, SMTP, etc.)
-      // Example implementation with nodemailer:
-      // const transporter = nodemailer.createTransport({...});
-      // await transporter.sendMail({
-      //   from: 'noreply@taskmanager.com',
-      //   to: email,
-      //   subject: emailSubject,
-      //   html: emailBody,
-      // });
+      // MailHog SMTP configuration for development/testing
+      const transporter = nodemailer.createTransport({
+        host: process.env.MAILHOG_HOST || 'mailhog',
+        port: parseInt(process.env.MAILHOG_PORT || '1025', 10),
+        secure: false,
+        auth: false,
+      });
+
+      await transporter.sendMail({
+        from: 'noreply@taskmanager.com',
+        to: email,
+        subject: emailSubject,
+        html: emailBody,
+      });
 
       this.logger.log(`Welcome email sent successfully to ${email}`);
     } catch (error) {
