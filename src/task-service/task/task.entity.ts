@@ -21,3 +21,59 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    CreateDateColumn,
+    UpdateDateColumn,
+} from 'typeorm';
+
+export enum TaskStatus {
+    PENDING = 'pending',
+    IN_PROGRESS = 'in_progress',
+    COMPLETED = 'completed',
+    CANCELED = 'canceled'
+}
+
+export enum TaskPriority {
+    LOW = 'low',
+    MEDIUM = 'medium',
+    HIGH = 'high',
+    URGENT = 'urgent'
+}
+
+@Entity('task')
+export class Task {
+
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column()
+    title: string;
+
+    @Column()
+    description: string;
+
+    @Column({ type: 'enum', enum: TaskStatus, default: TaskStatus.PENDING })
+    status: TaskStatus;
+
+    @Column({ type: 'enum', enum: TaskPriority, default: TaskPriority.MEDIUM })
+    priority: TaskPriority;
+
+
+    @Column({ name: 'due_date', type: 'timestamp with time zone', nullable: true })
+    dueDate: Date;
+
+    @Column({ name: 'assigned_user_id', type: 'int', nullable: true })
+    assignedUserId: number;
+
+    @Column({ name: 'created_by_user_id', type: 'int' })
+    createdByUserId: number;
+
+    @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
+    updatedAt: Date;
+}
