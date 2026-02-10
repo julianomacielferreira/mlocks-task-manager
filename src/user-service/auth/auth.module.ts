@@ -35,12 +35,12 @@ import { JwtStrategy } from './jwt.strategy';
         UserModule,
         PassportModule,
         JwtModule.register({
-            secret: JwtConstants.secret, // Replace with a strong, environment-variable-loaded secret in production
+            secret: JwtConstants.secret,
             signOptions: { expiresIn: '1h' }, // Token expiration time
         }),
     ],
     controllers: [AuthController],
     providers: [AuthService, JwtStrategy],
-    exports: [AuthService], // Export AuthService if other modules need to use it
+    exports: [AuthService],
 })
 export class AuthModule { }

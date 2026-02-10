@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDTO } from '../user/dto/create-user.dto';
 import * as argon2 from "argon2";
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -56,19 +56,10 @@ export class AuthService {
         };
     }
 
-    // Build the CreateUserDTO inside the method from a plain payload.
-    // `UserService.create` will hash the password, so pass the raw password.
-    public async register(payload: { username: string; password: string; email: string; firstName: string; lastName: string; }): Promise<any> {
+    public async findOne(id: number): Promise<User> {
 
-        const createUserDto: CreateUserDTO = {
-            username: payload.username,
-            email: payload.email,
-            password: payload.password,
-            firstName: payload.firstName,
-            lastName: payload.lastName,
-        };
+        const user = await this.userService.findOne(id);
 
-        const newUser = await this.userService.create(createUserDto);
-        return this.login(newUser);
+        return user;
     }
 }

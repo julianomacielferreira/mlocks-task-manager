@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Request, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginDTO } from './dto/login.dto';
+import { User } from '../user/user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -37,8 +38,7 @@ export class AuthController {
         const user = await this.authService.validateUser(loginDto.username, loginDto.password);
 
         if (!user) {
-            // You might want to throw an UnauthorizedException here instead of returning null
-            return { message: 'Invalid credentials' };
+            throw new UnauthorizedException('Invalid credentials');
         }
 
         return this.authService.login(user);
@@ -46,7 +46,24 @@ export class AuthController {
 
     @UseGuards(AuthGuard('jwt'))
     @Post('profile')
-    public getProfile(@Request() req) {
-        return req.user;
+    public async getProfile(@Request() req) {
+
+        const userPayload = req.user || {};
+
+        const userId = userPayload.id ?? userPayload.userId;
+
+        if (!userId) {
+            throw new UnauthorizedException('User ID not found in token payload');
+        }
+
+        const user: User = await this.authService.findOne(userId); // Try to fetch user from DB for the most up-to-date info, but fallback to token payload if service doesn't support it
+
+        if (!user) {
+            throw new UnauthorizedException('User not found');
+        }
+
+        const { password, ...safeUser } = user;
+
+        return safeUser;
     }
 }
