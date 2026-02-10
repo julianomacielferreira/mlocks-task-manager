@@ -28,6 +28,15 @@ services:
     networks:
       - mlocks_bridge
 
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mlocks_task_manager_mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - mlocks_bridge
+
   user-service:
     build: .
     container_name: mlocks_task_manager_user_service
@@ -91,9 +100,12 @@ services:
         RABBITMQ_PORT: ${RABBITMQ_PORT}
         RABBITMQ_USER: ${RABBITMQ_USER}
         RABBITMQ_PASS: ${RABBITMQ_PASS}
+        MAILHOG_HOST: ${MAILHOG_HOST}
+        MAILHOG_PORT: ${MAILHOG_PORT}
     depends_on:
       - postgres
       - rabbitmq
+      - mailhog
     ports:
       - "3002:3000"
     volumes:
