@@ -43,7 +43,7 @@ export enum TaskPriority {
     URGENT = 'urgent'
 }
 
-@Entity('task')
+@Entity('tasks')
 export class Task {
 
     @PrimaryGeneratedColumn()
@@ -65,8 +65,8 @@ export class Task {
     @Column({ name: 'due_date', type: 'timestamp with time zone', nullable: true })
     dueDate: Date;
 
-    @Column({ name: 'assigned_user_id', type: 'int', nullable: true })
-    assignedUserId: number;
+    @Column({ name: 'assigned_to_user_id', type: 'int', nullable: true })
+    assignedToUserId: number;
 
     @Column({ name: 'created_by_user_id', type: 'int' })
     createdByUserId: number;

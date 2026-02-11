@@ -23,32 +23,36 @@
  */
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TaskModule } from './task/task.module';
-import { Task } from './task/task.entity';
+import { TaskController } from './task.controller';
+import { TaskService } from './task.service';
+import { Task } from './task.entity';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true, // Makes ConfigModule available throughout the app
-    }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get<string>('DATABASE_HOST'),
-        port: configService.get<number>('DATABASE_PORT'),
-        username: configService.get<string>('DATABASE_USER'),
-        password: configService.get<string>('DATABASE_PASSWORD'),
-        database: configService.get<string>('DATABASE_NAME'),
-        entities: [Task],
-        synchronize: true, // WARNING: Not recommended for production! Creates/updates schema automatically
-      }),
-      inject: [ConfigService], // Inject ConfigService into the factory
-    }),
-    TaskModule
-  ],
-  controllers: [],
-  providers: [],
+    imports: [
+        TypeOrmModule.forFeature([Task]),
+        ClientsModule.registerAsync([
+            {
+                name: 'NOTIFICATION_SERVICE',
+                imports: [ConfigModule],
+                useFactory: (configService: ConfigService) => ({
+                    transport: Transport.RMQ as const,
+                    options: {
+                        urls: [`amqp://${configService.get('RABBITMQ_USER')}:${configService.get('RABBITMQ_PASS')}@${configService.get('RABBITMQ_HOST')}:${configService.get('RABBITMQ_PORT')}`],
+                        queue: 'notification_queue',
+                        queueOptions: {
+                            durable: true,
+                        },
+                    },
+                }),
+                inject: [ConfigService],
+            },
+        ]),
+    ],
+    controllers: [TaskController],
+    providers: [TaskService],
+    exports: [TaskService],
 })
-export class AppModule { }
+export class TaskModule { }
+

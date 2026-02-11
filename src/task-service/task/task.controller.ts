@@ -21,3 +21,78 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+import {
+    Controller,
+    Get,
+    Post,
+    Put,
+    Delete,
+    Body,
+    Param,
+    ParseIntPipe,
+    HttpCode,
+    HttpStatus,
+} from '@nestjs/common';
+import { TaskService } from './task.service';
+import { CreateTaskDTO } from './dto/create-task.dto';
+import { UpdateTaskDTO } from './dto/update-task.dto';
+import { Task } from './task.entity';
+
+@Controller('tasks')
+export class TaskController {
+
+    constructor(private readonly taskService: TaskService) { }
+
+    @Post()
+    @HttpCode(HttpStatus.CREATED)
+    public async create(@Body() createTaskDto: CreateTaskDTO): Promise<Task> {
+        console.log('Received create task request:', createTaskDto);
+        return this.taskService.create(createTaskDto);
+    }
+
+    @Get()
+    public async findAll(): Promise<Task[]> {
+        return this.taskService.findAll();
+    }
+
+    @Get(':id')
+    public async findOne(@Param('id', ParseIntPipe) id: number): Promise<Task> {
+        return this.taskService.findOne(id);
+    }
+
+    @Get('user/:userId')
+    public async findByUserId(@Param('userId', ParseIntPipe) userId: number): Promise<Task[]> {
+        return this.taskService.findByUserId(userId);
+    }
+
+    @Get('status/:status')
+    public async findByStatus(@Param('status') status: string): Promise<Task[]> {
+        return this.taskService.findByStatus(status);
+    }
+
+    @Get('priority/:priority')
+    public async findByPriority(@Param('priority') priority: string): Promise<Task[]> {
+        return this.taskService.findByPriority(priority);
+    }
+
+    @Get('due-date/:dueDate')
+    public async findByDueDate(@Param('dueDate') dueDate: string): Promise<Task[]> {
+        return this.taskService.findByDueDate(dueDate);
+    }
+
+    @Get('created-by/:createdByUserId')
+    public async findByCreatedByUserId(@Param('createdByUserId', ParseIntPipe) createdByUserId: number): Promise<Task[]> {
+        return this.taskService.findByCreatedByUserId(createdByUserId);
+    }
+
+    @Put(':id')
+    public async update(@Param('id', ParseIntPipe) id: number, @Body() updateTaskDto: UpdateTaskDTO): Promise<Task> {
+        return this.taskService.update(id, updateTaskDto);
+    }
+
+    @Delete(':id')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    public async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+        await this.taskService.delete(id);
+    }
+}

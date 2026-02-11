@@ -43,13 +43,13 @@ export class TaskService {
         const newTask = this.taskRepository.create({
             ...createTaskDTO,
             dueDate: createTaskDTO.dueDate ? new Date(createTaskDTO.dueDate) : null,
-            assignedUserId: createTaskDTO.assignedUserId ?? null
+            assignedToUserId: createTaskDTO.assignedToUserId ?? null
         });
 
         await this.taskRepository.save(newTask);
 
-        // Publish task creation event to RabbitMQ
-        this.client.emit('task.created', { taskId: newTask.id, title: newTask.title, assigned_user_id: newTask.assignedUserId });
+        // Publish task assigned event to RabbitMQ
+        this.client.emit('task.assigned', { taskId: newTask.id, title: newTask.title, assignedToUserId: newTask.assignedToUserId });
 
         return newTask;
     }
@@ -71,7 +71,7 @@ export class TaskService {
 
     public async findByUserId(userId: number): Promise<Task[]> {
 
-        const tasks = await this.taskRepository.find({ where: { assignedUserId: userId } });
+        const tasks = await this.taskRepository.find({ where: { assignedToUserId: userId } });
 
         this.throwNotFoundException(tasks, `No tasks found for user with ID ${userId}.`);
 
