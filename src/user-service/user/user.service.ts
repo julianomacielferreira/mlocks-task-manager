@@ -99,12 +99,10 @@ export class UserService {
             throw new NotFoundException("User not found");
         }
 
-        // Hash new password if provided
         if (updateUserDto.password) {
             updateUserDto.password = await argon2.hash(updateUserDto.password);
         }
 
-        // Update user properties
         Object.assign(user, updateUserDto);
 
         return this.userRepository.save(user);
