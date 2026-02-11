@@ -73,9 +73,7 @@ export class TaskService {
 
         const tasks = await this.taskRepository.find({ where: { assignedUserId: userId } });
 
-        if (!tasks || tasks.length === 0) {
-            throw new NotFoundException(`No tasks found for user with ID ${userId}.`);
-        }
+        this.throwNotFoundException(tasks, `No tasks found for user with ID ${userId}.`);
 
         return tasks;
     }
@@ -84,9 +82,7 @@ export class TaskService {
 
         const tasks = await this.taskRepository.find({ where: { status: status as any } });
 
-        if (!tasks || tasks.length === 0) {
-            throw new NotFoundException(`No tasks found with status "${status}".`);
-        }
+        this.throwNotFoundException(tasks, `No tasks found with status "${status}".`);
 
         return tasks;
     }
@@ -95,9 +91,7 @@ export class TaskService {
 
         const tasks = await this.taskRepository.find({ where: { priority: priority as any } });
 
-        if (!tasks || tasks.length === 0) {
-            throw new NotFoundException(`No tasks found with priority "${priority}".`);
-        }
+        this.throwNotFoundException(tasks, `No tasks found with priority "${priority}".`);
 
         return tasks;
     }
@@ -107,9 +101,7 @@ export class TaskService {
         const date = new Date(dueDate);
         const tasks = await this.taskRepository.find({ where: { dueDate: date } });
 
-        if (!tasks || tasks.length === 0) {
-            throw new NotFoundException(`No tasks found with due date "${dueDate}".`);
-        }
+        this.throwNotFoundException(tasks, `No tasks found with due date "${dueDate}".`);
 
         return tasks;
     }
@@ -118,9 +110,7 @@ export class TaskService {
 
         const tasks = await this.taskRepository.find({ where: { createdByUserId } });
 
-        if (!tasks || tasks.length === 0) {
-            throw new NotFoundException(`No tasks found created by user with ID ${createdByUserId}.`);
-        }
+        this.throwNotFoundException(tasks, `No tasks found created by user with ID ${createdByUserId}.`);
 
         return tasks;
     }
@@ -144,6 +134,13 @@ export class TaskService {
 
         if (result.affected === 0) {
             throw new NotFoundException(`Task with ID ${id} not found.`);
+        }
+    }
+
+    private throwNotFoundException(tasks: Task[], message: string) {
+
+        if (!tasks || tasks.length === 0) {
+            throw new NotFoundException(message);
         }
     }
 }
