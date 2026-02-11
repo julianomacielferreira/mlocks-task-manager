@@ -46,7 +46,6 @@ export class TaskController {
     @Post()
     @HttpCode(HttpStatus.CREATED)
     public async create(@Body() createTaskDto: CreateTaskDTO): Promise<Task> {
-        console.log('Received create task request:', createTaskDto);
         return this.taskService.create(createTaskDto);
     }
 
