@@ -29,22 +29,6 @@ import {
   Index,
 } from 'typeorm';
 
-/**
- * Notification Entity
- * 
- * Represents a notification record in the database. Notifications are used to
- * inform users about important events such as task assignments, task updates,
- * or welcome messages.
- * 
- * Properties:
- * - id: Unique identifier for the notification
- * - userId: Reference to the user who receives the notification (required)
- * - taskId: Reference to the associated task, if any (optional)
- * - message: The notification message content
- * - type: Category of notification (e.g., 'welcome', 'task_assigned', 'task_updated')
- * - isRead: Boolean flag indicating whether the notification has been read by the user
- * - createdAt: Timestamp of when the notification was created
- */
 @Entity('notifications')
 @Index('idx_notifications_user_id', ['userId'])
 @Index('idx_notifications_is_read', ['isRead'])

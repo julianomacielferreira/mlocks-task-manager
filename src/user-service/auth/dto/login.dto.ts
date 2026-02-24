@@ -21,7 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { IsString, IsNotEmpty, MinLength } from 'class-validator';
+import {
+    IsString,
+    IsNotEmpty,
+    MinLength
+} from 'class-validator';
 
 export class LoginDTO {
 
@@ -31,6 +35,6 @@ export class LoginDTO {
 
     @IsString()
     @IsNotEmpty()
-    @MinLength(6) // Example: minimum password length
+    @MinLength(6)
     password: string;
 }

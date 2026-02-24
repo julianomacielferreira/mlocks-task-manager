@@ -23,25 +23,22 @@
  */
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
-import { ConfigService } from '@nestjs/config'; // Import ConfigService
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);
-  const configService = app.get(ConfigService); // Get ConfigService from the application context
+  const configService = app.get(ConfigService);
   const microservice = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
       transport: Transport.RMQ,
       options: {
         urls: [`amqp://${configService.get('RABBITMQ_USER')}:${configService.get('RABBITMQ_PASS')}@${configService.get('RABBITMQ_HOST')}:${configService.get('RABBITMQ_PORT')}`],
-        queue: 'notification_queue', // This service listens on 'notification_queue'
+        queue: 'notification_queue',
         queueOptions: {
           durable: true,
         },
-        // Optional: Control message processing
-        // prefetchCount: 1, // Process only one message at a time per consumer
-        // noAck: false, // Require explicit acknowledgment (default is true for events, but good to know)
       },
     },
   );

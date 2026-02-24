@@ -23,29 +23,27 @@
  */
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([User]),  // Register the User entity with TypeORM for this module
+        TypeOrmModule.forFeature([User]),
         ClientsModule.registerAsync([
             {
-                name: 'NOTIFICATION_SERVICE', // A token to inject the client
+                name: 'NOTIFICATION_SERVICE',
                 imports: [ConfigModule],
                 useFactory: (configService: ConfigService) => ({
                     transport: Transport.RMQ as const,
                     options: {
                         urls: [`amqp://${configService.get('RABBITMQ_USER')}:${configService.get('RABBITMQ_PASS')}@${configService.get('RABBITMQ_HOST')}:${configService.get('RABBITMQ_PORT')}`],
-                        queue: 'notification_queue', // This is the queue the producer sends messages to (it will be created if it doesn't exist)
+                        queue: 'notification_queue',
                         queueOptions: {
-                            durable: true, // Messages in this queue are not persisted
+                            durable: true,
                         },
-                        // For a producer, typically you don't need to specify a prefetchCount or noAck.
-                        // These are more for consumers.
                     },
                 }),
                 inject: [ConfigService],

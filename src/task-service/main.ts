@@ -27,13 +27,13 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // Enable global validation for incoming DTOs
+
   app.useGlobalPipes(new ValidationPipe({
-    whitelist: true, // Strips away properties that are not defined in the DTO
-    forbidNonWhitelisted: true, // Throws an error if non-whitelisted properties are sent
-    transform: true, // Automatically transforms payload objects to DTO instances
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
   }));
-  // Listen on port 3000 (or from environment variable)
+
   const port = process.env.PORT || 3000;
   await app.listen(port);
   console.log(`Task service running on port ${port}`);

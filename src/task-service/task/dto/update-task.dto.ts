@@ -21,16 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { PartialType } from '@nestjs/mapped-types'; // Or '@nestjs/swagger' for newer versions
+import { PartialType } from '@nestjs/mapped-types';
 import { CreateTaskDTO } from './create-task.dto';
 import { IsOptional, IsString, IsEnum } from 'class-validator';
 import { TaskStatus } from '../task.entity';
 
-// PartialType makes all fields of CreateTaskDTO optional
 export class UpdateTaskDTO extends PartialType(CreateTaskDTO) {
 
     @IsString()
-    @IsOptional() // Explicitly mark as optional, though PartialType handles this too
+    @IsOptional()
     title?: string;
 
     @IsString()

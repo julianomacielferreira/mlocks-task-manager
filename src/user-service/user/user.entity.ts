@@ -28,6 +28,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
 @Entity('users')
 export class User {
 
@@ -40,8 +41,8 @@ export class User {
   @Column({ unique: true, length: 100 })
   email: string;
 
-  @Column({ name: 'password_hash' }) // Explicitly map to 'password_hash' column
-  password: string; // Store the hashed password here
+  @Column({ name: 'password_hash' })
+  password: string;
 
   @Column({ name: 'first_name', length: 50, nullable: true })
   firstName: string;
@@ -49,9 +50,6 @@ export class User {
   @Column({ name: 'last_name', length: 50, nullable: true })
   lastName: string;
 
-  // You might add a 'role' column for RBAC later
-  // @Column({ type: 'enum', enum: ['admin', 'user'], default: 'user' })
-  // role: string;
   @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
   createdAt: Date;
 

@@ -21,7 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Controller, Post, Body, UseGuards, Request, UnauthorizedException } from '@nestjs/common';
+import {
+    Controller,
+    Post,
+    Body,
+    UseGuards,
+    Request,
+    UnauthorizedException
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginDTO } from './dto/login.dto';
@@ -56,7 +63,7 @@ export class AuthController {
             throw new UnauthorizedException('User ID not found in token payload');
         }
 
-        const user: User = await this.authService.findOne(userId); // Try to fetch user from DB for the most up-to-date info, but fallback to token payload if service doesn't support it
+        const user: User = await this.authService.findOne(userId);
 
         if (!user) {
             throw new UnauthorizedException('User not found');

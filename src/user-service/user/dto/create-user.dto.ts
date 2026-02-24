@@ -21,7 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import {
+    IsEmail,
+    IsNotEmpty,
+    IsString,
+    MinLength
+} from 'class-validator';
 
 export class CreateUserDTO {
 

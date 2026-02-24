@@ -23,12 +23,12 @@
  */
 import { config } from 'dotenv';
 
-config(); // Load .env variables
+config();
 
 if (!process.env.JWT_SECRET) {
   throw new Error('Missing JWT_SECRET environment variable. Set it in .env or in the environment.');
 }
 
 export const JwtConstants = {
-  secret: process.env.JWT_SECRET, // Use the environment variable-loaded secret
+  secret: process.env.JWT_SECRET,
 };

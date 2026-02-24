@@ -36,12 +36,11 @@ export class UserService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
-        @Inject("NOTIFICATION_SERVICE") private readonly client: ClientProxy // Inject RabbitMQ client
+        @Inject("NOTIFICATION_SERVICE") private readonly client: ClientProxy
     ) { }
 
     public async create(createUserDto: CreateUserDTO): Promise<User> {
 
-        // Check if username or email already exists
         const existingUser = await this.userRepository.findOne({
             where: [{ username: createUserDto.username }, { email: createUserDto.email }],
         });
@@ -54,17 +53,15 @@ export class UserService {
             throw new ConflictException('Email already in use.');
         }
 
-        // Hash the password before saving
         const hashedPassword = await argon2.hash(createUserDto.password);
 
         const newUser = this.userRepository.create({
             ...createUserDto,
-            password: hashedPassword // Store the hashed password
+            password: hashedPassword
         });
 
         await this.userRepository.save(newUser);
 
-        // Publish a 'user.created' event to RabbitMQ
         this.client.emit("user.created", { id: newUser.id, username: newUser.username, email: newUser.email });
 
         console.log(`User ${newUser.username} created.Emitted 'user.created' event.`);
@@ -93,7 +90,7 @@ export class UserService {
 
     public async update(id: number, updateUserDto: UpdateUserDTO): Promise<User> {
 
-        const user = await this.findOne(id); // Ensure user exists
+        const user = await this.findOne(id);
 
         if (!user) {
             throw new NotFoundException("User not found");

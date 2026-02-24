@@ -35,7 +35,7 @@ export class TaskService {
     constructor(
         @InjectRepository(Task)
         private readonly taskRepository: Repository<Task>,
-        @Inject("NOTIFICATION_SERVICE") private readonly client: ClientProxy // Inject RabbitMQ client
+        @Inject("NOTIFICATION_SERVICE") private readonly client: ClientProxy
     ) { }
 
     public async create(createTaskDTO: CreateTaskDTO): Promise<Task> {
@@ -48,8 +48,14 @@ export class TaskService {
 
         await this.taskRepository.save(newTask);
 
-        // Publish task assigned event to RabbitMQ
-        this.client.emit('task.assigned', { taskId: newTask.id, title: newTask.title, assignedToUserId: newTask.assignedToUserId });
+        this.client.emit(
+            'task.assigned',
+            {
+                taskId: newTask.id,
+                title: newTask.title,
+                assignedToUserId: newTask.assignedToUserId
+            }
+        );
 
         return newTask;
     }
@@ -117,7 +123,7 @@ export class TaskService {
 
     public async update(id: number, updateTaskDTO: UpdateTaskDTO): Promise<Task> {
 
-        const task = await this.findOne(id); // Ensure task exists
+        const task = await this.findOne(id);
 
         if (!task) {
             throw new NotFoundException("Task not found");

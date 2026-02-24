@@ -21,15 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { PartialType } from '@nestjs/mapped-types'; // Or '@nestjs/swagger' for newer versions
+import { PartialType } from '@nestjs/mapped-types';
 import { CreateUserDTO } from './create-user.dto';
-import { IsOptional, IsString, MinLength, IsEmail } from 'class-validator';
+import {
+    IsOptional,
+    IsString,
+    MinLength,
+    IsEmail
+} from 'class-validator';
 
-// PartialType makes all fields of CreateUserDTO optional
 export class UpdateUserDTO extends PartialType(CreateUserDTO) {
 
     @IsString()
-    @IsOptional() // Explicitly mark as optional, though PartialType handles this too
+    @IsOptional()
     @MinLength(3, { message: 'Username must be at least 3 characters long.' })
     username?: string;
 

@@ -30,6 +30,7 @@ import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class NotificationService {
+  
   private readonly logger = new Logger(NotificationService.name);
 
   constructor(
@@ -40,30 +41,28 @@ export class NotificationService {
   public async createNotification(userId: number, type: string, message: string, taskId?: number): Promise<Notification> {
 
     try {
-      // Create a new Notification entity instance
+
       const notification = this.notificationRepository.create({
         userId,
         taskId,
         message,
         type,
-        isRead: false, // New notifications are unread by default
+        isRead: false,
       });
 
-      // Save the notification to the database
-      const savedNotification = await this.notificationRepository.save(
-        notification,
-      );
+      const savedNotification = await this.notificationRepository.save(notification);
 
-      this.logger.log(
-        `Notification created for user ${userId} with type '${type}'`,
-      );
+      this.logger.log(`Notification created for user ${userId} with type '${type}'`);
 
       return savedNotification;
+
     } catch (error) {
+
       this.logger.error(
         `Failed to create notification for user ${userId}: ${error.message}`,
         error.stack,
       );
+
       throw error;
     }
   }
@@ -71,7 +70,7 @@ export class NotificationService {
   public async sendWelcomeEmail(email: string, username: string): Promise<void> {
 
     try {
-      // Email content for the welcome message
+
       const emailSubject = 'Welcome to Task Manager!';
       const emailBody = `
         <h1>Welcome, ${username}!</h1>
@@ -85,13 +84,12 @@ export class NotificationService {
         <p>Best regards,<br/>The Task Manager Team</p>
       `;
 
-      // Log email sending (in production, replace with actual email service)
       this.logger.log(
         `Sending welcome email to ${email} (${username})`,
       );
+
       this.logger.debug(`Email Subject: ${emailSubject}`);
 
-      // MailHog SMTP configuration for development/testing
       const transporter = nodemailer.createTransport({
         host: process.env.MAILHOG_HOST || 'mailhog',
         port: parseInt(process.env.MAILHOG_PORT || '1025', 10),
@@ -107,21 +105,24 @@ export class NotificationService {
       });
 
       this.logger.log(`Welcome email sent successfully to ${email}`);
+
     } catch (error) {
+
       this.logger.error(
         `Failed to send welcome email to ${email}: ${error.message}`,
         error.stack,
       );
-      // Don't throw - email failure shouldn't block user creation
+
     }
   }
 
   public async getNotificationsByUserId(userId: number): Promise<Notification[]> {
 
     try {
+
       const notifications = await this.notificationRepository.find({
         where: { userId },
-        order: { createdAt: 'DESC' }, // Most recent first
+        order: { createdAt: 'DESC' },
       });
 
       this.logger.log(
@@ -129,11 +130,14 @@ export class NotificationService {
       );
 
       return notifications;
+
     } catch (error) {
+
       this.logger.error(
         `Failed to retrieve notifications for user ${userId}: ${error.message}`,
         error.stack,
       );
+
       throw error;
     }
   }
@@ -141,9 +145,10 @@ export class NotificationService {
   public async getUnreadNotifications(userId: number): Promise<Notification[]> {
 
     try {
+
       const notifications = await this.notificationRepository.find({
         where: { userId, isRead: false },
-        order: { createdAt: 'DESC' }, // Most recent first
+        order: { createdAt: 'DESC' },
       });
 
       this.logger.log(
@@ -151,11 +156,14 @@ export class NotificationService {
       );
 
       return notifications;
+
     } catch (error) {
+
       this.logger.error(
         `Failed to retrieve unread notifications for user ${userId}: ${error.message}`,
         error.stack,
       );
+
       throw error;
     }
   }
@@ -163,7 +171,7 @@ export class NotificationService {
   public async markAsRead(notificationId: number): Promise<Notification> {
 
     try {
-      // Find the notification by ID
+
       const notification = await this.notificationRepository.findOne({
         where: { id: notificationId },
       });
@@ -173,8 +181,8 @@ export class NotificationService {
         return null;
       }
 
-      // Update the isRead flag to true
       notification.isRead = true;
+
       const updatedNotification = await this.notificationRepository.save(
         notification,
       );
@@ -182,11 +190,14 @@ export class NotificationService {
       this.logger.log(`Notification ${notificationId} marked as read`);
 
       return updatedNotification;
+
     } catch (error) {
+
       this.logger.error(
         `Failed to mark notification ${notificationId} as read: ${error.message}`,
         error.stack,
       );
+
       throw error;
     }
   }
@@ -194,21 +205,23 @@ export class NotificationService {
   public async markAllAsRead(userId: number): Promise<number> {
 
     try {
+
       const result = await this.notificationRepository.update(
         { userId, isRead: false },
         { isRead: true },
       );
 
-      this.logger.log(
-        `Marked ${result.affected} notifications as read for user ${userId}`,
-      );
+      this.logger.log(`Marked ${result.affected} notifications as read for user ${userId}`);
 
       return result.affected;
+
     } catch (error) {
+
       this.logger.error(
         `Failed to mark all notifications as read for user ${userId}: ${error.message}`,
         error.stack,
       );
+
       throw error;
     }
   }
@@ -216,21 +229,27 @@ export class NotificationService {
   public async deleteNotification(notificationId: number): Promise<boolean> {
 
     try {
+
       const result = await this.notificationRepository.delete(notificationId);
 
       if (result.affected === 0) {
+
         this.logger.warn(`Notification ${notificationId} not found for deletion`);
+
         return false;
       }
 
       this.logger.log(`Notification ${notificationId} deleted successfully`);
 
       return true;
+
     } catch (error) {
+
       this.logger.error(
         `Failed to delete notification ${notificationId}: ${error.message}`,
         error.stack,
       );
+
       throw error;
     }
   }
@@ -238,18 +257,20 @@ export class NotificationService {
   public async deleteUserNotifications(userId: number): Promise<number> {
 
     try {
+
       const result = await this.notificationRepository.delete({ userId });
 
-      this.logger.log(
-        `Deleted ${result.affected} notifications for user ${userId}`,
-      );
+      this.logger.log(`Deleted ${result.affected} notifications for user ${userId}`);
 
       return result.affected;
+
     } catch (error) {
+
       this.logger.error(
         `Failed to delete notifications for user ${userId}: ${error.message}`,
         error.stack,
       );
+
       throw error;
     }
   }
@@ -257,16 +278,20 @@ export class NotificationService {
   public async getUnreadCount(userId: number): Promise<number> {
 
     try {
+
       const count = await this.notificationRepository.count({
         where: { userId, isRead: false },
       });
 
       return count;
+
     } catch (error) {
+
       this.logger.error(
         `Failed to get unread count for user ${userId}: ${error.message}`,
         error.stack,
       );
+
       throw error;
     }
   }

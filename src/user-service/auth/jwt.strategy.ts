@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 import { JwtConstants } from '../constants';
 
 @Injectable()
@@ -32,14 +32,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor() {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            ignoreExpiration: false, // Set to true if you want to ignore token expiration
+            ignoreExpiration: false,
             secretOrKey: JwtConstants.secret,
         });
     }
 
     public async validate(payload: any) {
-        // This payload is the one signed by JwtService.sign()
-        // You can fetch the user from the database here if needed.
-        return { userId: payload.sub, username: payload.username };
+
+        return {
+            userId: payload.sub,
+            username: payload.username
+        };
     }
 }

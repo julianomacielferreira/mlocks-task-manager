@@ -38,13 +38,13 @@ import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { User } from './user.entity';
 
-@Controller('users') // Base route path for this controller
+@Controller('users')
 export class UserController {
 
     constructor(private readonly userService: UserService) { }
 
     @Post()
-    @HttpCode(HttpStatus.CREATED) // Explicitly set HTTP status to 201 Created
+    @HttpCode(HttpStatus.CREATED)
     public async create(@Body() createUserDto: CreateUserDTO): Promise<User> {
         return this.userService.create(createUserDto);
     }
@@ -65,7 +65,7 @@ export class UserController {
     }
 
     @Delete(':id')
-    @HttpCode(HttpStatus.NO_CONTENT) // Explicitly set HTTP status to 204 No Content
+    @HttpCode(HttpStatus.NO_CONTENT)
     public async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
         await this.userService.remove(id);
     }
