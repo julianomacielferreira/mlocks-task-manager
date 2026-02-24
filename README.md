@@ -491,4 +491,4 @@ Ran all test suites.
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project uses a [MIT licensed](https://github.com/julianomacielferreira/mlocks-task-manager/blob/master/LICENSE).
