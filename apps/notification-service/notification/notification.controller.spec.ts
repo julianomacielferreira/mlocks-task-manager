@@ -77,18 +77,18 @@ describe('NotificationController', () => {
 
             service.createNotification.mockResolvedValue({ id: 10 });
 
-            const data = { taskId: 5, assignedToUserId: 7, taskTitle: 'Do Task X' } as any;
+            const data = { taskId: 5, assignedToUserId: 7, title: 'Do Task X' } as any;
 
             await expect(controller.handleTaskAssigned(data)).resolves.toBeUndefined();
 
-            expect(service.createNotification).toHaveBeenCalledWith(7, 'task_assigned', `Task "${data.taskTitle}" assigned to you.`);
+            expect(service.createNotification).toHaveBeenCalledWith(7, 'task_assigned', `Task "${data.title}" assigned to you.`);
         });
 
         it('propagates error from createNotification', async () => {
 
             service.createNotification.mockRejectedValue(new Error('db error'));
 
-            const data = { taskId: 6, assignedToUserId: 8, taskTitle: 'Task Y' } as any;
+            const data = { taskId: 6, assignedToUserId: 8, title: 'Task Y' } as any;
 
             await expect(controller.handleTaskAssigned(data)).rejects.toThrow('db error');
         });
@@ -100,18 +100,18 @@ describe('NotificationController', () => {
 
             service.createNotification.mockResolvedValue({ id: 11 });
 
-            const data = { taskId: 9, userId: 3, taskTitle: 'TaskA', newStatus: 'done' } as any;
+            const data = { taskId: 9, userId: 3, title: 'TaskA', newStatus: 'done' } as any;
 
             await expect(controller.handleTaskUpdated(data)).resolves.toBeUndefined();
 
-            expect(service.createNotification).toHaveBeenCalledWith(3, 'task_updated', `Task "${data.taskTitle}" status changed to ${data.newStatus}.`);
+            expect(service.createNotification).toHaveBeenCalledWith(3, 'task_updated', `Task "${data.title}" status changed to ${data.newStatus}.`);
         });
 
         it('propagates errors from createNotification', async () => {
 
             service.createNotification.mockRejectedValue(new Error('fail'));
 
-            const data = { taskId: 10, userId: 4, taskTitle: 'TaskB', newStatus: 'open' } as any;
+            const data = { taskId: 10, userId: 4, title: 'TaskB', newStatus: 'open' } as any;
 
             await expect(controller.handleTaskUpdated(data)).rejects.toThrow('fail');
         });
