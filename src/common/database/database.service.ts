@@ -21,20 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { TaskModule } from './task/task.module';
-import { DatabaseModule } from 'src/common/database';
+import { Injectable, Inject } from '@nestjs/common';
+import { IDatabaseConnection, DATABASE_CONNECTION } from './database.interface';
+import { EntityManager } from 'typeorm';
 
-@Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    DatabaseModule.forRootAsync(),
-    TaskModule
-  ],
-  controllers: [],
-  providers: [],
-})
-export class AppModule { }
+@Injectable()
+export class DatabaseService implements IDatabaseConnection {
+
+    constructor(
+        @Inject(DATABASE_CONNECTION) private readonly connection: IDatabaseConnection,
+    ) { }
+
+    getDataSource() {
+        return this.connection.getDataSource();
+    }
+
+    async query(query: string, params?: any[]) {
+        return this.getDataSource().query(query, params);
+    }
+
+    async transaction<T>(work: (manager: EntityManager) => Promise<T>): Promise<T> {
+        return this.getDataSource().transaction(work);
+    }
+}
+
+export default DatabaseService;

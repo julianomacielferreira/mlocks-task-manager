@@ -22,32 +22,18 @@
  * THE SOFTWARE.
  */
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { User } from './user/user.entity';
+import { DatabaseModule } from 'src/common/database';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // Makes ConfigModule available throughout the app
+      isGlobal: true,
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get<string>('DATABASE_HOST'),
-        port: configService.get<number>('DATABASE_PORT'),
-        username: configService.get<string>('DATABASE_USER'),
-        password: configService.get<string>('DATABASE_PASSWORD'),
-        database: configService.get<string>('DATABASE_NAME'),
-        entities: [User],
-        synchronize: true, // WARNING: Not recommended for production! Creates/updates schema automatically
-      }),
-      inject: [ConfigService], // Inject ConfigService into the factory
-    }),
+    DatabaseModule.forRootAsync(),
     UserModule,
     AuthModule,
   ],

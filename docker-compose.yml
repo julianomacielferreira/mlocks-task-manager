@@ -57,6 +57,7 @@ services:
       - "3000:3000"
     volumes:
       - ./src/user-service:/app/src
+      - ./src/common:/app/src/common
       - ./package.json:/app/package.json
     command: npm run start:dev
     networks:
@@ -82,6 +83,7 @@ services:
       - "3001:3000"
     volumes:
       - ./src/task-service:/app/src
+      - ./src/common:/app/src/common
       - ./package.json:/app/package.json
     command: npm run start:dev
     networks:
@@ -110,6 +112,7 @@ services:
       - "3002:3000"
     volumes:
       - ./src/notification-service:/app/src
+      - ./src/common:/app/src/common
       - ./package.json:/app/package.json
     command: npm run start:dev
     networks:

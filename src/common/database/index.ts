@@ -21,20 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { TaskModule } from './task/task.module';
-import { DatabaseModule } from 'src/common/database';
-
-@Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    DatabaseModule.forRootAsync(),
-    TaskModule
-  ],
-  controllers: [],
-  providers: [],
-})
-export class AppModule { }
+export * from './database.module';
+export * from './database.interface';
+export * from './database.providers';
+export * from './database.service';

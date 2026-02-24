@@ -21,20 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { TaskModule } from './task/task.module';
-import { DatabaseModule } from 'src/common/database';
+import { DataSource } from 'typeorm';
 
-@Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    DatabaseModule.forRootAsync(),
-    TaskModule
-  ],
-  controllers: [],
-  providers: [],
-})
-export class AppModule { }
+export const DATABASE_CONNECTION = 'DATABASE_CONNECTION';
+
+export interface IDatabaseConnection { getDataSource(): DataSource; }
