@@ -145,15 +145,13 @@ These are not inside the monorepo. They are infrastructure.
 
 #### Communication Flow
 
-Example flow:
+An example flow:
 
-1. User Service creates a task
-2. Emits event to RabbitMQ
-3. Task Service consumes event
-4. Task Service persists to Postgres
-5. Emits event
-6. Notification Service consumes event
-7. Sends email via Mailhog (in dev)
+1. Task Service creates a task
+2. Task Service persists to Postgres
+3. Emits event to RabbitMQ
+4. Notification Service consumes event
+5. Sends email via Mailhog (in dev)
 
 #### The directory structure of the project:
 
