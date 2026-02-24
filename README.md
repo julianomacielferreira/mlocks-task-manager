@@ -405,6 +405,10 @@ Time:        6.299 s
 Ran all test suites.
 ```
 
+## Test coverage
+
+The output:
+
 ```
 # test coverage
 $ npm run test:cov
