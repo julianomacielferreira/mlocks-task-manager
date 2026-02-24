@@ -101,7 +101,61 @@ A High-Level Architecture Digram (Monorepo + Microservices):
                └──────────────────────────┘
 ```
 
-The directory structure of the project:
+#### apps/
+
+Each service is an independent NestJS application:
+
+- apps/user-service
+- apps/task-service
+- apps/notification-service
+
+Each has:
+
+- its own `main.ts`
+- its own `AppModule`
+- its own environment configuration
+- its own Docker runtime
+
+They communicate asynchronously via RabbitMQ.
+
+#### libs/
+
+Shared reusable modules:
+
+- `libs/database`
+- `libs/common`
+
+These are:
+
+- Pure TypeScript libraries
+- Compiled once
+- Used by all apps
+- No business ownership
+
+Important: libs do NOT represent services. They are internal shared code.
+
+#### Infrastructure Layer
+
+External services (Docker containers):
+
+- PostgreSQL (data persistence)
+- RabbitMQ (event-driven communication)
+
+These are not inside the monorepo. They are infrastructure.
+
+#### Communication Flow
+
+Example flow:
+
+1. User Service creates a task
+2. Emits event to RabbitMQ
+3. Task Service consumes event
+4. Task Service persists to Postgres
+5. Emits event
+6. Notification Service consumes event
+7. Sends email via Mailhog (in dev)
+
+#### The directory structure of the project:
 
 ```
 .
