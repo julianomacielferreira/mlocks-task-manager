@@ -45,18 +45,18 @@ export class NotificationController {
     }
 
     @EventPattern('task.assigned')
-    async handleTaskAssigned(data: { taskId: number; assignedToUserId: number; taskTitle: string }) {
+    async handleTaskAssigned(data: { taskId: number; assignedToUserId: number; title: string }) {
 
-        this.logger.log(`Received task.assigned event for task: ${data.taskTitle}`);
+        this.logger.log(`Received task.assigned event for task: ${data.title}`);
 
-        await this.notificationService.createNotification(data.assignedToUserId, 'task_assigned', `Task "${data.taskTitle}" assigned to you.`);
+        await this.notificationService.createNotification(data.assignedToUserId, 'task_assigned', `Task "${data.title}" assigned to you.`);
     }
 
     @EventPattern('task.updated')
-    async handleTaskUpdated(data: { taskId: number; userId: number; taskTitle: string; newStatus: string }) {
+    async handleTaskUpdated(data: { taskId: number; userId: number; title: string; newStatus: string }) {
 
-        this.logger.log(`Received task.updated event for task: ${data.taskTitle}`);
+        this.logger.log(`Received task.updated event for task: ${data.title}`);
 
-        await this.notificationService.createNotification(data.userId, 'task_updated', `Task "${data.taskTitle}" status changed to ${data.newStatus}.`);
+        await this.notificationService.createNotification(data.userId, 'task_updated', `Task "${data.title}" status changed to ${data.newStatus}.`);
     }
 }
