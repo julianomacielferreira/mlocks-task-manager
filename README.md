@@ -354,23 +354,20 @@ CREATE INDEX idx_notifications_is_read ON notifications (is_read);
 
 - **`updated_at` Trigger**: Automatically updates the updated_at timestamp whenever a row is modified in users or tasks. This is super handy for tracking changes.
 
-## Project setup
-
-```bash
-$ npm install
-```
-
 ## Compile and run the project
 
+You need [Docker](https://docs.docker.com/install/) eand [Docker Compose](https://docs.docker.com/compose/install/) installed.
+
+**In the project's root folder, rename the file [.env-example](./.env-example) to `.env`**:
+
 ```bash
-# development
-$ npm run start
+$ mv .env-example .env
+```
 
-# watch mode
-$ npm run start:dev
+Create the image and start the container:
 
-# production mode
-$ npm run start:prod
+```bash
+$ docker-compose up -d --build
 ```
 
 ## Run tests
