@@ -22,8 +22,9 @@
  * THE SOFTWARE.
  */
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { AppModule } from './app.module';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -33,6 +34,16 @@ async function bootstrap() {
     forbidNonWhitelisted: true,
     transform: true,
   }));
+
+  const config = new DocumentBuilder()
+    .setTitle('MLocks Task Manager API')
+    .setDescription('API to manage tasks and users for MLocks Task Manager')
+    .setVersion('1.0')
+    .build();
+
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+
+  SwaggerModule.setup('api', app, documentFactory);
 
   const port = process.env.PORT || 3000;
   await app.listen(port);

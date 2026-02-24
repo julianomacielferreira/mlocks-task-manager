@@ -29,16 +29,27 @@ import {
     Request,
     UnauthorizedException
 } from '@nestjs/common';
+import {
+    ApiTags,
+    ApiOperation,
+    ApiOkResponse,
+    ApiUnauthorizedResponse,
+    ApiBearerAuth,
+} from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginDTO } from './dto/login.dto';
 import { User } from '../user/user.entity';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
 
     constructor(private authService: AuthService) { }
 
+    @ApiOperation({ summary: 'Login and receive a JWT' })
+    @ApiOkResponse({ description: 'Login successful' })
+    @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
     @Post('login')
     public async login(@Body() loginDto: LoginDTO) {
 
@@ -51,6 +62,10 @@ export class AuthController {
         return this.authService.login(user);
     }
 
+    @ApiBearerAuth()
+    @ApiOperation({ summary: 'Get authenticated user profile' })
+    @ApiOkResponse({ type: User })
+    @ApiUnauthorizedResponse({ description: 'Unauthorized or invalid token' })
     @UseGuards(AuthGuard('jwt'))
     @Post('profile')
     public async getProfile(@Request() req) {

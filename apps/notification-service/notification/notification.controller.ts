@@ -22,9 +22,11 @@
  * THE SOFTWARE.
  */
 import { Controller, Logger } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { EventPattern } from '@nestjs/microservices';
 import { NotificationService } from './notification.service';
 
+@ApiTags('notifications')
 @Controller()
 export class NotificationController {
 

@@ -33,37 +33,55 @@ import {
     HttpCode,
     HttpStatus,
 } from '@nestjs/common';
+import {
+    ApiTags,
+    ApiOperation,
+    ApiCreatedResponse,
+    ApiOkResponse,
+    ApiResponse,
+} from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { User } from './user.entity';
 
+@ApiTags('users')
 @Controller('users')
 export class UserController {
 
     constructor(private readonly userService: UserService) { }
 
+    @ApiOperation({ summary: 'Create a new user' })
+    @ApiCreatedResponse({ type: User })
     @Post()
     @HttpCode(HttpStatus.CREATED)
     public async create(@Body() createUserDto: CreateUserDTO): Promise<User> {
         return this.userService.create(createUserDto);
     }
 
+    @ApiOperation({ summary: 'Retrieve all users' })
+    @ApiOkResponse({ type: User, isArray: true })
     @Get()
     public async findAll(): Promise<User[]> {
         return this.userService.findAll();
     }
 
+    @ApiOperation({ summary: 'Retrieve a user by id' })
+    @ApiOkResponse({ type: User })
     @Get(':id')
     async findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
         return this.userService.findOne(id);
     }
 
+    @ApiOperation({ summary: 'Update a user' })
+    @ApiOkResponse({ type: User })
     @Put(':id')
     public async update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDTO): Promise<User> {
         return this.userService.update(id, updateUserDto);
     }
 
+    @ApiOperation({ summary: 'Delete a user' })
+    @ApiResponse({ status: 204, description: 'No content' })
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     public async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
