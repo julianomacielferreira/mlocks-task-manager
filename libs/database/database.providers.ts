@@ -22,6 +22,7 @@
  * THE SOFTWARE.
  */
 import { ConfigService } from '@nestjs/config';
+import * as path from 'path';
 import { DataSource } from 'typeorm';
 import { Pool } from 'pg';
 import { DATABASE_CONNECTION } from './database.interface';
@@ -38,7 +39,7 @@ export const dataSourceProvider = {
             username: config.get('DATABASE_USER'),
             password: config.get('DATABASE_PASSWORD'),
             database: config.get('DATABASE_NAME'),
-            entities: [__dirname + '/../../**/*.entity{.ts,.js}'],
+            entities: [path.join(__dirname, '..', '..', 'apps', '**', '*.entity{.ts,.js}')],
             synchronize: false,
         });
         await ds.initialize();

@@ -378,12 +378,112 @@ $ npm run start:prod
 ```bash
 # unit tests
 $ npm run test
+```
 
-# e2e tests
-$ npm run test:e2e
+The output:
 
+```bash
+> mlocks-task-manager@0.0.1 test
+> jest
+
+ PASS  libs/database/database.service.spec.ts
+ PASS  apps/task-service/task/task.controller.spec.ts (5.241 s)
+ PASS  apps/user-service/user/user.controller.spec.ts (5.274 s)
+ PASS  apps/notification-service/notification/notification.controller.spec.ts
+ PASS  apps/task-service/task/task.service.spec.ts
+ PASS  apps/user-service/user/user.service.spec.ts
+  ● Console
+
+    console.log
+      User juliano created.Emitted 'user.created' event.
+
+      at UserService.create (apps/user-service/user/user.service.ts:67:17)
+
+ PASS  apps/notification-service/notification/notification.service.spec.ts
+
+Test Suites: 7 passed, 7 total
+Tests:       89 passed, 89 total
+Snapshots:   0 total
+Time:        6.299 s
+Ran all test suites.
+```
+
+```
 # test coverage
 $ npm run test:cov
+
+> mlocks-task-manager@0.0.1 test:cov
+> jest --coverage
+
+ PASS  libs/database/database.service.spec.ts
+ PASS  apps/task-service/task/task.controller.spec.ts (5.712 s)
+ PASS  apps/user-service/user/user.controller.spec.ts (5.75 s)
+ PASS  apps/notification-service/notification/notification.controller.spec.ts
+ PASS  apps/task-service/task/task.service.spec.ts
+ PASS  apps/notification-service/notification/notification.service.spec.ts
+ PASS  apps/user-service/user/user.service.spec.ts
+  ● Console
+
+    console.log
+      User juliano created.Emitted 'user.created' event.
+
+      at UserService.log [as create] (apps/user-service/user/user.service.ts:67:17)
+
+----------------------------------------|---------|----------|---------|---------|-------------------
+File                                    | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------------------------------------|---------|----------|---------|---------|-------------------
+All files                               |   63.12 |    59.57 |   72.72 |   64.69 |                   
+ apps/notification-service              |       0 |      100 |       0 |       0 |                   
+  app.module.ts                         |       0 |      100 |     100 |       0 | 24-45             
+  main.ts                               |       0 |      100 |       0 |       0 | 24-48             
+ apps/notification-service/notification |     100 |      100 |     100 |     100 |                   
+  notification.controller.ts            |     100 |      100 |     100 |     100 |                   
+  notification.entity.ts                |     100 |      100 |     100 |     100 |                   
+  notification.service.ts               |     100 |      100 |     100 |     100 |                   
+ apps/task-service                      |       0 |        0 |       0 |       0 |                   
+  app.module.ts                         |       0 |      100 |     100 |       0 | 24-40             
+  main.ts                               |       0 |        0 |       0 |       0 | 24-41             
+ apps/task-service/task                 |   89.09 |    92.85 |   96.15 |   90.19 |                   
+  task.controller.ts                    |     100 |      100 |     100 |     100 |                   
+  task.entity.ts                        |     100 |      100 |     100 |     100 |                   
+  task.module.ts                        |       0 |      100 |       0 |       0 | 24-57             
+  task.service.ts                       |   97.77 |       90 |     100 |   97.67 | 129               
+ apps/task-service/task/dto             |      90 |      100 |       0 |     100 |                   
+  create-task.dto.ts                    |   83.33 |      100 |       0 |     100 |                   
+  update-task.dto.ts                    |     100 |      100 |     100 |     100 |                   
+ apps/user-service                      |       0 |        0 |       0 |       0 |                   
+  app.module.ts                         |       0 |      100 |     100 |       0 | 24-42             
+  constants.ts                          |       0 |        0 |     100 |       0 | 24-32             
+  main.ts                               |       0 |        0 |       0 |       0 | 24-52             
+ apps/user-service/auth                 |       0 |        0 |       0 |       0 |                   
+  auth.controller.ts                    |       0 |        0 |       0 |       0 | 24-89             
+  auth.module.ts                        |       0 |      100 |     100 |       0 | 24-46             
+  auth.service.ts                       |       0 |        0 |       0 |       0 | 24-63             
+  jwt.strategy.ts                       |       0 |      100 |       0 |       0 | 24-42             
+ apps/user-service/auth/dto             |       0 |      100 |     100 |       0 |                   
+  login.dto.ts                          |       0 |      100 |     100 |       0 | 24-39             
+ apps/user-service/user                 |   85.18 |       90 |   92.85 |    86.3 |                   
+  user.controller.ts                    |     100 |      100 |     100 |     100 |                   
+  user.entity.ts                        |     100 |      100 |     100 |     100 |                   
+  user.module.ts                        |       0 |      100 |       0 |       0 | 24-57             
+  user.service.ts                       |   97.36 |       90 |     100 |   97.22 | 96                
+ apps/user-service/user/dto             |     100 |      100 |     100 |     100 |                   
+  create-user.dto.ts                    |     100 |      100 |     100 |     100 |                   
+  update-user.dto.ts                    |     100 |      100 |     100 |     100 |                   
+ libs/database                          |    28.2 |        0 |   44.44 |   25.71 |                   
+  database.interface.ts                 |     100 |      100 |     100 |     100 |                   
+  database.module.ts                    |       0 |        0 |       0 |       0 | 24-40             
+  database.providers.ts                 |       0 |      100 |       0 |       0 | 24-67             
+  database.service.ts                   |     100 |      100 |     100 |     100 |                   
+  index.ts                              |       0 |      100 |     100 |       0 | 24-27             
+----------------------------------------|---------|----------|---------|---------|-------------------
+
+Test Suites: 7 passed, 7 total
+Tests:       89 passed, 89 total
+Snapshots:   0 total
+Time:        12.182 s
+Ran all test suites.
+
 ```
 
 ## Deployment
