@@ -22,9 +22,13 @@
  * THE SOFTWARE.
  */
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { TaskModule } from './task/task.module';
-import { DatabaseModule } from 'src/common/database';
+import { DatabaseModule } from '@app/database';
+import { NotificationController } from './notification/notification.controller';
+import { NotificationService } from './notification/notification.service';
+import { Notification } from './notification/notification.entity';
+
 
 @Module({
   imports: [
@@ -32,9 +36,10 @@ import { DatabaseModule } from 'src/common/database';
       isGlobal: true,
     }),
     DatabaseModule.forRootAsync(),
-    TaskModule
+    TypeOrmModule.forFeature([Notification]),
   ],
-  controllers: [],
-  providers: [],
+
+  controllers: [NotificationController],
+  providers: [NotificationService],
 })
 export class AppModule { }

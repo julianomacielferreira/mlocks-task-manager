@@ -38,7 +38,9 @@ services:
       - mlocks_bridge
 
   user-service:
-    build: .
+    build: 
+      context: .
+      dockerfile: apps/user-service/Dockerfile
     container_name: mlocks_task_manager_user_service
     environment:
         DATABASE_HOST: ${DATABASE_HOST}
@@ -56,15 +58,15 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./src/user-service:/app/src
-      - ./src/common:/app/src/common
-      - ./package.json:/app/package.json
-    command: npm run start:dev
+      - .:/app
+    command: npm run start:dev user-service
     networks:
       - mlocks_bridge
 
   task-service:
-    build: .
+    build: 
+      context: .
+      dockerfile: apps/task-service/Dockerfile
     container_name: mlocks_task_manager_task_service
     environment:
         DATABASE_HOST: ${DATABASE_HOST}
@@ -82,15 +84,15 @@ services:
     ports:
       - "3001:3000"
     volumes:
-      - ./src/task-service:/app/src
-      - ./src/common:/app/src/common
-      - ./package.json:/app/package.json
-    command: npm run start:dev
+      - .:/app
+    command: npm run start:dev task-service
     networks:
       - mlocks_bridge
 
   notification-service:
-    build: .
+    build: 
+      context: .
+      dockerfile: apps/notification-service/Dockerfile
     container_name: mlocks_task_manager_notification_service
     environment:
         DATABASE_HOST: ${DATABASE_HOST}
@@ -111,10 +113,8 @@ services:
     ports:
       - "3002:3000"
     volumes:
-      - ./src/notification-service:/app/src
-      - ./src/common:/app/src/common
-      - ./package.json:/app/package.json
-    command: npm run start:dev
+      - .:/app
+    command: npm run start:dev notification-service
     networks:
       - mlocks_bridge
       
