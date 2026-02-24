@@ -30,7 +30,7 @@ import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class NotificationService {
-  
+
   private readonly logger = new Logger(NotificationService.name);
 
   constructor(
@@ -84,9 +84,7 @@ export class NotificationService {
         <p>Best regards,<br/>The Task Manager Team</p>
       `;
 
-      this.logger.log(
-        `Sending welcome email to ${email} (${username})`,
-      );
+      this.logger.log(`Sending welcome email to ${email} (${username})`);
 
       this.logger.debug(`Email Subject: ${emailSubject}`);
 
@@ -125,9 +123,7 @@ export class NotificationService {
         order: { createdAt: 'DESC' },
       });
 
-      this.logger.log(
-        `Retrieved ${notifications.length} notifications for user ${userId}`,
-      );
+      this.logger.log(`Retrieved ${notifications.length} notifications for user ${userId}`);
 
       return notifications;
 
@@ -151,9 +147,7 @@ export class NotificationService {
         order: { createdAt: 'DESC' },
       });
 
-      this.logger.log(
-        `Retrieved ${notifications.length} unread notifications for user ${userId}`,
-      );
+      this.logger.log(`Retrieved ${notifications.length} unread notifications for user ${userId}`);
 
       return notifications;
 
