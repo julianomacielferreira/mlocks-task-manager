@@ -76,40 +76,29 @@ The directory structure of the project:
 
 ```
 .
-├── docker-compose.yml
-├── Dockerfile
-├── .eslintrc.js
-├── .gitignore
-├── LICENSE
-├── nest-cli.json
-├── package.json
-├── package-lock.json
-├── .prettierrc
-├── README.md
-├── schema.sql
-├── src
+├── apps
 │   ├── notification-service
-│   │   ├── app.controller.ts
 │   │   ├── app.module.ts
-│   │   ├── app.service.ts
+│   │   ├── Dockerfile
 │   │   ├── main.ts
 │   │   └── notification
 │   │       ├── notification.controller.ts
 │   │       ├── notification.entity.ts
 │   │       └── notification.service.ts
 │   ├── task-service
-│   │   ├── app.controller.ts
 │   │   ├── app.module.ts
-│   │   ├── app.service.ts
+│   │   ├── Dockerfile
 │   │   ├── main.ts
 │   │   └── task
+│   │       ├── dto
+│   │       │   ├── create-task.dto.ts
+│   │       │   └── update-task.dto.ts
 │   │       ├── task.controller.ts
 │   │       ├── task.entity.ts
+│   │       ├── task.module.ts
 │   │       └── task.service.ts
 │   └── user-service
-│       ├── app.controller.ts
 │       ├── app.module.ts
-│       ├── app.service.ts
 │       ├── auth
 │       │   ├── auth.controller.ts
 │       │   ├── auth.module.ts
@@ -117,16 +106,46 @@ The directory structure of the project:
 │       │   ├── dto
 │       │   │   └── login.dto.ts
 │       │   └── jwt.strategy.ts
+│       ├── constants.ts
+│       ├── Dockerfile
 │       ├── main.ts
 │       └── user
+│           ├── dto
+│           │   ├── create-user.dto.ts
+│           │   └── update-user.dto.ts
 │           ├── user.controller.ts
 │           ├── user.entity.ts
+│           ├── user.module.ts
 │           └── user.service.ts
+├── docker-compose.yml
+├── Dockerfile
+├── .env-example
+├── .eslintrc.js
+├── .gitignore
+├── libs
+│   ├── common
+│   └── database
+│       ├── database.interface.ts
+│       ├── database.module.ts
+│       ├── database.providers.ts
+│       ├── database.service.ts
+│       ├── index.ts
+│       └── README.md
+├── LICENSE
+├── migrations
+├── nest-cli.json
+├── package.json
+├── package-lock.json
+├── .prettierrc
+├── README.md
+├── schema.sql
 ├── test
 │   ├── app.e2e-spec.ts
 │   └── jest-e2e.json
 ├── tsconfig.build.json
 └── tsconfig.json
+
+16 directories, 52 files
 ```
 
 ## Database Structure
