@@ -105,9 +105,9 @@ A High-Level Architecture Digram (Monorepo + Microservices):
 
 Each service is an independent NestJS application:
 
-- apps/user-service
-- apps/task-service
-- apps/notification-service
+- `apps/user-service`
+- `apps/task-service`
+- `apps/notification-service`
 
 Each has:
 
