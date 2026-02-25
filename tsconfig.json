@@ -21,6 +21,9 @@
       "@app/database": [
         "libs/database/"
       ],
+      "@app/mail": [
+        "libs/mail/"
+      ],
       "@app/common": [
         "libs/common/"
       ]

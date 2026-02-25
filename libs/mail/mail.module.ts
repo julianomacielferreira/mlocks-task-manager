@@ -21,9 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Module } from '@nestjs/common';
+import { Module, Global } from '@nestjs/common';
 import { MailService } from './mail.service';
 
+@Global()
 @Module({
     providers: [MailService],
     exports: [MailService],

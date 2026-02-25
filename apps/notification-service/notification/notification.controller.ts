@@ -25,7 +25,7 @@ import { Controller, Logger } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { EventPattern } from '@nestjs/microservices';
 import { NotificationService } from './notification.service';
-import { MailService } from '../mail/mail.service';
+import { MailService } from '../../../libs/mail/mail.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../user-service/user/user.entity';

@@ -21,21 +21,5 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { NotificationService } from './notification.service';
-import { MailModule } from '@app/mail';
-import { NotificationController } from './notification.controller';
-import { Notification } from './notification.entity';
-import { User } from '../../user-service/user/user.entity';
-
-@Module({
-    imports: [
-        MailModule,
-        TypeOrmModule.forFeature([Notification, User])
-    ],
-    controllers: [NotificationController],
-    providers: [NotificationService],
-    exports: [NotificationService],
-})
-export class NotificationModule { }
+export * from './mail.module';
+export * from './mail.service';
