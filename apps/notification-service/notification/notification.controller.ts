@@ -25,6 +25,7 @@ import { Controller, Logger } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { EventPattern } from '@nestjs/microservices';
 import { NotificationService } from './notification.service';
+import { MailService } from '../mail/mail.service';
 
 @ApiTags('notifications')
 @Controller()
@@ -32,14 +33,17 @@ export class NotificationController {
 
     private readonly logger = new Logger(NotificationController.name);
 
-    constructor(private readonly notificationService: NotificationService) { }
+    constructor(
+        private readonly notificationService: NotificationService,
+        private readonly mailService: MailService
+    ) { }
 
     @EventPattern('user.created')
     async handleUserCreated(data: { id: number; email: string; username: string }) {
 
         this.logger.log(`Received user.created event for user: ${data.username}`);
 
-        await this.notificationService.sendWelcomeEmail(data.email, data.username);
+        await this.mailService.sendWelcomeEmail(data.email, data.username);
 
         await this.notificationService.createNotification(data.id, 'welcome', `Welcome, ${data.username}!`);
     }

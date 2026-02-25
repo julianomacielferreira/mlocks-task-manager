@@ -25,7 +25,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Notification } from './notification.entity';
-import * as nodemailer from 'nodemailer';
 
 
 @Injectable()
@@ -35,7 +34,7 @@ export class NotificationService {
 
   constructor(
     @InjectRepository(Notification)
-    private readonly notificationRepository: Repository<Notification>,
+    private readonly notificationRepository: Repository<Notification>
   ) { }
 
   public async createNotification(userId: number, type: string, message: string, taskId?: number): Promise<Notification> {
@@ -64,53 +63,6 @@ export class NotificationService {
       );
 
       throw error;
-    }
-  }
-
-  public async sendWelcomeEmail(email: string, username: string): Promise<void> {
-
-    try {
-
-      const emailSubject = 'Welcome to Task Manager!';
-      const emailBody = `
-        <h1>Welcome, ${username}!</h1>
-        <p>Thank you for joining our Task Manager application.</p>
-        <p>Your account has been successfully created:</p>
-        <ul>
-          <li>Email: ${email}</li>
-          <li>Username: ${username}</li>
-        </ul>
-        <p>You can now log in and start managing your tasks.</p>
-        <p>Best regards,<br/>The Task Manager Team</p>
-      `;
-
-      this.logger.log(`Sending welcome email to ${email} (${username})`);
-
-      this.logger.debug(`Email Subject: ${emailSubject}`);
-
-      const transporter = nodemailer.createTransport({
-        host: process.env.MAILHOG_HOST || 'mailhog',
-        port: parseInt(process.env.MAILHOG_PORT || '1025', 10),
-        secure: false,
-        auth: false,
-      });
-
-      await transporter.sendMail({
-        from: 'noreply@taskmanager.com',
-        to: email,
-        subject: emailSubject,
-        html: emailBody,
-      });
-
-      this.logger.log(`Welcome email sent successfully to ${email}`);
-
-    } catch (error) {
-
-      this.logger.error(
-        `Failed to send welcome email to ${email}: ${error.message}`,
-        error.stack,
-      );
-
     }
   }
 

@@ -25,22 +25,27 @@ import { Logger } from '@nestjs/common';
 import { NotificationController } from './notification.controller';
 
 const mockService = () => ({
-    sendWelcomeEmail: jest.fn(),
     createNotification: jest.fn(),
+});
+
+const mockMailService = () => ({
+    sendWelcomeEmail: jest.fn(),
 });
 
 describe('NotificationController', () => {
 
     let service: ReturnType<typeof mockService>;
+    let mailService: ReturnType<typeof mockMailService>;
     let controller: NotificationController;
 
     beforeEach(() => {
         jest.restoreAllMocks();
         service = mockService();
+        mailService = mockMailService();
 
         jest.spyOn(Logger.prototype, 'log').mockImplementation(() => undefined);
 
-        controller = new NotificationController(service as any);
+        controller = new NotificationController(service as any, mailService as any);
     });
 
     afterEach(() => jest.clearAllMocks());
@@ -49,20 +54,20 @@ describe('NotificationController', () => {
 
         it('calls sendWelcomeEmail and createNotification on success', async () => {
 
-            service.sendWelcomeEmail.mockResolvedValue(undefined);
+            (mailService.sendWelcomeEmail as jest.Mock).mockResolvedValue(undefined);
             service.createNotification.mockResolvedValue({ id: 1 });
 
             const data = { id: 1, email: 'ju.maciel.ferreira@gmail.com', username: 'juliano' };
 
             await expect(controller.handleUserCreated(data)).resolves.toBeUndefined();
 
-            expect(service.sendWelcomeEmail).toHaveBeenCalledWith('ju.maciel.ferreira@gmail.com', 'juliano');
+            expect(mailService.sendWelcomeEmail).toHaveBeenCalledWith('ju.maciel.ferreira@gmail.com', 'juliano');
             expect(service.createNotification).toHaveBeenCalledWith(1, 'welcome', `Welcome, juliano!`);
         });
 
         it('propagates error from sendWelcomeEmail and does not call createNotification', async () => {
 
-            service.sendWelcomeEmail.mockRejectedValue(new Error('smtp fail'));
+            (mailService.sendWelcomeEmail as jest.Mock).mockRejectedValue(new Error('smtp fail'));
 
             const data = { id: 2, email: 'ju.maciel.ferreira@gmail.com', username: 'juliano' };
 

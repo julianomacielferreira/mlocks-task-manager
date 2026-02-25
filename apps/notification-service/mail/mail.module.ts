@@ -22,21 +22,10 @@
  * THE SOFTWARE.
  */
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from '@app/database';
-import { NotificationModule } from './notification/notification.module';
-
+import { MailService } from './mail.service';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    DatabaseModule.forRootAsync(),
-    NotificationModule,
-  ],
-
-  controllers: [],
-  providers: [],
+    providers: [MailService],
+    exports: [MailService],
 })
-export class AppModule { }
+export class MailModule { }

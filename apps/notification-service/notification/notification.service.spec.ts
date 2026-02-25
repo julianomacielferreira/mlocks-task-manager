@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import * as nodemailer from 'nodemailer';
 import { NotificationService } from './notification.service';
 import { Logger } from '@nestjs/common';
 
@@ -49,7 +48,6 @@ describe('NotificationService', () => {
 
     let repo: MockRepo;
     let service: NotificationService;
-    let sendMailMock: jest.Mock;
 
     beforeEach(() => {
 
@@ -60,12 +58,6 @@ describe('NotificationService', () => {
         jest.spyOn(Logger.prototype, 'log').mockImplementation(() => undefined);
         jest.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
         jest.spyOn(Logger.prototype, 'debug').mockImplementation(() => undefined);
-
-        sendMailMock = jest.fn().mockResolvedValue(true);
-
-        jest.spyOn(nodemailer, 'createTransport').mockReturnValue({
-            sendMail: sendMailMock,
-        } as any);
 
         service = new NotificationService(repo as any);
     });
@@ -102,30 +94,6 @@ describe('NotificationService', () => {
             (repo.save as jest.Mock).mockRejectedValue(new Error('db error'));
 
             await expect(service.createNotification(1, 'info', 'msg')).rejects.toThrow('db error');
-        });
-    });
-
-    describe('sendWelcomeEmail', () => {
-
-        it('sends email using nodemailer', async () => {
-
-            await expect(service.sendWelcomeEmail('ju.maciel.ferreira@gmail.com', 'juliano')).resolves.toBeUndefined();
-
-            expect(nodemailer.createTransport).toHaveBeenCalled();
-
-            expect(sendMailMock).toHaveBeenCalledWith(expect.objectContaining({
-                to: 'ju.maciel.ferreira@gmail.com',
-                subject: expect.any(String),
-                html: expect.any(String),
-            }));
-        });
-
-        it('catches errors from transporter and does not throw', async () => {
-
-            sendMailMock.mockRejectedValueOnce(new Error('smtp error'));
-
-            await expect(service.sendWelcomeEmail('ju.maciel.ferreira@gmail.com', 'juliano')).resolves.toBeUndefined();
-            expect(sendMailMock).toHaveBeenCalled();
         });
     });
 
