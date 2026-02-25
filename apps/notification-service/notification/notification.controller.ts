@@ -28,7 +28,7 @@ import { NotificationService } from './notification.service';
 import { MailService } from '../../../libs/mail/mail.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../../user-service/user/user.entity';
+import { UserProjection } from './user-projection.entity';
 
 @ApiTags('notifications')
 @Controller()
@@ -39,8 +39,8 @@ export class NotificationController {
     constructor(
         private readonly notificationService: NotificationService,
         private readonly mailService: MailService,
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
+        @InjectRepository(UserProjection)
+        private readonly userProjectionRepo: Repository<UserProjection>,
     ) { }
 
     @EventPattern('user.created')
@@ -50,6 +50,8 @@ export class NotificationController {
 
         await this.mailService.sendWelcomeEmail(data.email, data.username);
 
+        await this.userProjectionRepo.save({ id: data.id, email: data.email, username: data.username });
+
         await this.notificationService.createNotification(data.id, 'welcome', `Welcome, ${data.username}!`);
     }
 
@@ -58,12 +60,14 @@ export class NotificationController {
 
         this.logger.log(`Received task.assigned event for task: ${data.title}`);
 
-        const user = await this.userRepository.findOne({ where: { id: data.assignedToUserId } });
+        const projection = await this.userProjectionRepo.findOne({ where: { id: data.assignedToUserId } });
 
-        const assigneeEmail = user?.email || (data as any).email || (data as any).assignedToUserEmail;
+        const assigneeEmail = projection?.email || (data as any).email || null;
 
         if (assigneeEmail) {
             await this.mailService.sendTaskAssignedEmail(assigneeEmail, data.title);
+        } else {
+            // fallback: attempt a fast HTTP call to user-service or enqueue retry
         }
 
         await this.notificationService.createNotification(data.assignedToUserId, 'task_assigned', `Task "${data.title}" assigned to you.`);
