@@ -30,22 +30,29 @@ const mockService = () => ({
 
 const mockMailService = () => ({
     sendWelcomeEmail: jest.fn(),
+    sendTaskAssignedEmail: jest.fn(),
+});
+
+const mockUserRepo = () => ({
+    findOne: jest.fn(),
 });
 
 describe('NotificationController', () => {
 
     let service: ReturnType<typeof mockService>;
     let mailService: ReturnType<typeof mockMailService>;
+    let userRepo: ReturnType<typeof mockUserRepo>;
     let controller: NotificationController;
 
     beforeEach(() => {
         jest.restoreAllMocks();
         service = mockService();
         mailService = mockMailService();
+        userRepo = mockUserRepo();
 
         jest.spyOn(Logger.prototype, 'log').mockImplementation(() => undefined);
 
-        controller = new NotificationController(service as any, mailService as any);
+        controller = new NotificationController(service as any, mailService as any, userRepo as any);
     });
 
     afterEach(() => jest.clearAllMocks());
@@ -81,12 +88,40 @@ describe('NotificationController', () => {
         it('calls createNotification with task assignment data', async () => {
 
             service.createNotification.mockResolvedValue({ id: 10 });
+            (userRepo.findOne as jest.Mock).mockResolvedValue(undefined);
 
             const data = { taskId: 5, assignedToUserId: 7, title: 'Do Task X' } as any;
 
             await expect(controller.handleTaskAssigned(data)).resolves.toBeUndefined();
 
-            expect(service.createNotification).toHaveBeenCalledWith(7, 'task_assigned', `Task "${data.title}" assigned to you.`);
+            expect(userRepo.findOne).toHaveBeenCalledWith({ where: { id: 7 } });
+            expect(service.createNotification).toHaveBeenCalledWith(7, 'task_assigned', `Task \"${data.title}\" assigned to you.`);
+        });
+
+        it('sends task assigned email when assignee email present and creates notification', async () => {
+
+            service.createNotification.mockResolvedValue({ id: 12 });
+            (userRepo.findOne as jest.Mock).mockResolvedValue({ id: 9, email: 'assignee@example.com' });
+            (mailService.sendTaskAssignedEmail as jest.Mock).mockResolvedValue(undefined);
+
+            const data = { taskId: 8, assignedToUserId: 9, title: 'Do Important' } as any;
+
+            await expect(controller.handleTaskAssigned(data)).resolves.toBeUndefined();
+
+            expect(userRepo.findOne).toHaveBeenCalledWith({ where: { id: 9 } });
+            expect(mailService.sendTaskAssignedEmail).toHaveBeenCalledWith('assignee@example.com', data.title);
+            expect(service.createNotification).toHaveBeenCalledWith(9, 'task_assigned', `Task \"${data.title}\" assigned to you.`);
+        });
+
+        it('propagates error from mailService and does not call createNotification when email send fails', async () => {
+
+            (userRepo.findOne as jest.Mock).mockResolvedValue({ id: 11, email: 'bad@example.com' });
+            (mailService.sendTaskAssignedEmail as jest.Mock).mockRejectedValue(new Error('smtp fail'));
+
+            const data = { taskId: 10, assignedToUserId: 11, title: 'TaskZ' } as any;
+
+            await expect(controller.handleTaskAssigned(data)).rejects.toThrow('smtp fail');
+            expect(service.createNotification).not.toHaveBeenCalled();
         });
 
         it('propagates error from createNotification', async () => {

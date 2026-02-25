@@ -161,10 +161,17 @@ An example flow:
 │   ├── notification-service
 │   │   ├── app.module.ts
 │   │   ├── Dockerfile
+│   │   ├── mail
+│   │   │   ├── mail.module.ts
+│   │   │   ├── mail.service.spec.ts
+│   │   │   └── mail.service.ts
 │   │   ├── main.ts
 │   │   └── notification
+│   │       ├── notification.controller.spec.ts
 │   │       ├── notification.controller.ts
 │   │       ├── notification.entity.ts
+│   │       ├── notification.module.ts
+│   │       ├── notification.service.spec.ts
 │   │       └── notification.service.ts
 │   ├── task-service
 │   │   ├── app.module.ts
@@ -174,9 +181,11 @@ An example flow:
 │   │       ├── dto
 │   │       │   ├── create-task.dto.ts
 │   │       │   └── update-task.dto.ts
+│   │       ├── task.controller.spec.ts
 │   │       ├── task.controller.ts
 │   │       ├── task.entity.ts
 │   │       ├── task.module.ts
+│   │       ├── task.service.spec.ts
 │   │       └── task.service.ts
 │   └── user-service
 │       ├── app.module.ts
@@ -194,9 +203,11 @@ An example flow:
 │           ├── dto
 │           │   ├── create-user.dto.ts
 │           │   └── update-user.dto.ts
+│           ├── user.controller.spec.ts
 │           ├── user.controller.ts
 │           ├── user.entity.ts
 │           ├── user.module.ts
+│           ├── user.service.spec.ts
 │           └── user.service.ts
 ├── docker-compose.yml
 ├── Dockerfile
@@ -209,6 +220,7 @@ An example flow:
 │       ├── database.interface.ts
 │       ├── database.module.ts
 │       ├── database.providers.ts
+│       ├── database.service.spec.ts
 │       ├── database.service.ts
 │       ├── index.ts
 │       └── README.md
@@ -226,7 +238,7 @@ An example flow:
 ├── tsconfig.build.json
 └── tsconfig.json
 
-16 directories, 52 files
+17 directories, 63 files
 ```
 
 ## Database Structure

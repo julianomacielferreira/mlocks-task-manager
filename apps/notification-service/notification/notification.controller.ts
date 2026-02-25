@@ -26,6 +26,9 @@ import { ApiTags } from '@nestjs/swagger';
 import { EventPattern } from '@nestjs/microservices';
 import { NotificationService } from './notification.service';
 import { MailService } from '../mail/mail.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from '../../user-service/user/user.entity';
 
 @ApiTags('notifications')
 @Controller()
@@ -35,7 +38,9 @@ export class NotificationController {
 
     constructor(
         private readonly notificationService: NotificationService,
-        private readonly mailService: MailService
+        private readonly mailService: MailService,
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
     ) { }
 
     @EventPattern('user.created')
@@ -52,6 +57,14 @@ export class NotificationController {
     async handleTaskAssigned(data: { taskId: number; assignedToUserId: number; title: string }) {
 
         this.logger.log(`Received task.assigned event for task: ${data.title}`);
+
+        const user = await this.userRepository.findOne({ where: { id: data.assignedToUserId } });
+
+        const assigneeEmail = user?.email || (data as any).email || (data as any).assignedToUserEmail;
+
+        if (assigneeEmail) {
+            await this.mailService.sendTaskAssignedEmail(assigneeEmail, data.title);
+        }
 
         await this.notificationService.createNotification(data.assignedToUserId, 'task_assigned', `Task "${data.title}" assigned to you.`);
     }
