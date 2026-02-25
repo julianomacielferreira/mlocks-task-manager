@@ -51,6 +51,15 @@ CREATE TABLE notifications (
         ON DELETE SET NULL -- If a task is deleted, notification task_id becomes NULL
 );
 
+-- Create User Projection Table
+CREATE TABLE user_projection (
+	id int4 NOT NULL,
+	email varchar NULL,
+	username varchar NULL,
+	"updatedAt" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT pk_user_projection PRIMARY KEY (id)
+);
+
 -- Add indexes for performance on foreign keys and frequently queried columns
 CREATE INDEX idx_users_email ON users (email);
 CREATE INDEX idx_tasks_status ON tasks (status);
