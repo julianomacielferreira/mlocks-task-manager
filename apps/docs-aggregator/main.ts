@@ -26,14 +26,14 @@ const swaggerUi = require('swagger-ui-express');
 const path = require('path');
 const fs = require('fs');
 
-const app = express();
+const app = (express as any)();
+
 const docsDir = path.resolve(__dirname, '../../docs');
+
 const combinedPath = path.join(docsDir, 'combined.json');
 
-// serve raw JSON files under /docs
 app.use('/docs', express.static(docsDir));
 
-// serve Swagger UI and point it to the combined JSON
 app.use(
     '/api-docs',
     swaggerUi.serve,
@@ -43,11 +43,14 @@ app.use(
 app.get('/', (_req, res) => res.redirect('/api-docs'));
 
 const port = process.env.PORT || 3004;
+
 app.listen(port, () => {
+
     console.log(`Docs available: http://localhost:${port}/api-docs`);
+
     if (!fs.existsSync(combinedPath)) {
         console.warn(`Warning: ${combinedPath} not found — run docs:generate first.`);
     }
 });
 
-export { }; // keep file a module
+export { };
