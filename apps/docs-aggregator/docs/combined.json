@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Combined API",
+    "title": "MLocks Task Manager",
     "version": "1.0"
   },
   "paths": {

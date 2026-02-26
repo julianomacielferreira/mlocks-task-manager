@@ -30,7 +30,7 @@ const files = fs.readdirSync(docsDir).filter(file => file.endsWith('.json'));
 
 const merged: any = {
     openapi: '3.0.0',
-    info: { title: 'Combined API', version: '1.0' },
+    info: { title: 'MLocks Task Manager', version: '1.0' },
     paths: {},
     components: { schemas: {}, responses: {}, parameters: {}, securitySchemes: {} },
     tags: [],
