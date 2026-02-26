@@ -58,10 +58,6 @@ async function bootstrap() {
       path.join(outDir, 'user-service.json'),
       JSON.stringify(document, null, 2)
     );
-
-    await app.close();
-
-    process.exit(0);
   }
 
   const port = process.env.PORT || 3000;

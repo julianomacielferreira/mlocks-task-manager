@@ -73,10 +73,6 @@ async function bootstrap() {
     );
 
     await docApp.close();
-
-    await appContext.close();
-
-    process.exit(0);
   }
 
   await microservice.listen();
