@@ -54,51 +54,49 @@ The task manager application will have the following features:
 A High-Level Architecture Digram (Monorepo + Microservices):
 
 ```
-                           ┌───────────────────────────┐
-                           │        Monorepo           │
-                           │                           │
-                           │  ┌─────────────────────┐  │
-                           │  │        apps/        │  │
-                           │  │                     │  │
-                           │  │  ┌───────────────┐  │  │
-                           │  │  │ User Service  │  │  │
-                           │  │  └───────────────┘  │  │
-                           │  │           │         │  │
-                           │  │           ▼         │  │
-                           │  │  ┌───────────────┐  │  │
-                           │  │  │ Task Service  │  │  │
-                           │  │  └───────────────┘  │  │
-                           │  │           │         │  │
-                           │  │           ▼         │  │
-                           │  │  ┌────────────────┐ │  │
-                           │  │  │ Notification   │ │  │
-                           │  │  │   Service      │ │  │
-                           │  │  └────────────────┘ │  │
-                           │  │                     │  │
-                           │  └─────────────────────┘  │
-                           │                           │
-                           │  ┌─────────────────────┐  │
-                           │  │        libs/        │  │
-                           │  │                     │  │
-                           │  │  ┌───────────────┐  │  │
-                           │  │  │  database     │  │  │
-                           │  │  ├───────────────┤  │  │
-                           │  │  │  common       │  │  │
-                           │  │  └───────────────┘  │  │
-                           │  └─────────────────────┘  │
-                           └───────────────────────────┘
+                               ┌───────────────────────────┐
+                               │      Task Manager         │
+                               └────────────┬──────────────┘
+                                            │
+        ┌───────────────────────────────────┼───────────────────────────────────┐
+        │                                   │                                   │
+
+┌──────────────────────┐        ┌──────────────────────┐        ┌──────────────────────┐
+│     User Service     │        │     Task Service     │        │ Notification Service │
+│  (NestJS App)        │        │  (NestJS App)        │        │  (NestJS App)        │
+│                      │        │                      │        │                      │
+│ - Auth Module        │        │ - Task CRUD          │        │ - Event Handlers     │
+│ - User Module        │        │ - Emits Events       │        │ - Mail Integration   │
+│ - JWT                │        │                      │        │ - User Projection    │
+└──────────┬───────────┘        └──────────┬───────────┘        └──────────┬───────────┘
+           │                                 │                                 │
+           │                                 │                                 │
+           ▼                                 ▼                                 ▼
+     PostgreSQL                        PostgreSQL                         PostgreSQL
+         (logical ownership per service / schema)
+
+                         ┌──────────────────────────┐
+                         │        RabbitMQ          │
+                         │  Event Communication     │
+                         └──────────────────────────┘
+                                   ▲
+                                   │ task.assigned
+                                   │ user.created
+                                   ▼
+
+                         ┌──────────────────────────┐
+                         │         Mailhog          │
+                         │       SMTP (Dev)         │
+                         └──────────────────────────┘
 
 
-               ┌────────────────────────┐
-               │     RabbitMQ Broker    │
-               └────────────────────────┘
-                        ▲        ▲
-                        │        │
-            (events)    │        │   (events)
-                        │        │
-               ┌────────┴────────┴────────┐
-               │      PostgreSQL DB       │
-               └──────────────────────────┘
+Internal Tool:
+
+┌──────────────────────────────┐
+│      Docs Aggregator         │
+│ - Merges OpenAPI specs       │
+│ - Produces combined.json     │
+└──────────────────────────────┘
 ```
 
 #### apps/
