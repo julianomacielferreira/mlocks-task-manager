@@ -21,8 +21,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "docs:generate": "ts-node scripts/merge-openapi.ts",
-    "docs:serve": "npx ts-node -r tsconfig-paths/register apps/docs-aggregator/main.ts"
+    "docs:generate": "ts-node docs-aggregator/merge-openapi.ts",
+    "docs:serve": "npx ts-node -r tsconfig-paths/register docs-aggregator/main.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

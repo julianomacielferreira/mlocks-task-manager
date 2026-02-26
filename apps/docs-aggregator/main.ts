@@ -28,7 +28,7 @@ const fs = require('fs');
 
 const app = (express as any)();
 
-const docsDir = path.resolve(__dirname, '../../docs');
+const docsDir = path.resolve(__dirname, './docs');
 
 const combinedPath = path.join(docsDir, 'combined.json');
 

@@ -24,7 +24,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-const docsDir = path.resolve(__dirname, '../docs');
+const docsDir = path.resolve(__dirname, './docs');
 
 const files = fs.readdirSync(docsDir).filter(file => file.endsWith('.json'));
 
@@ -40,33 +40,29 @@ for (const file of files) {
 
     const doc = JSON.parse(fs.readFileSync(path.join(docsDir, file), 'utf8'));
 
-    // merge paths (careful about collisions)
     Object.assign(merged.paths, doc.paths || {});
 
-    // merge components.schemas (simple copy; consider prefixing to avoid name collisions)
     if (doc.components?.schemas) {
-        for (const [k, v] of Object.entries(doc.components.schemas)) {
-            // optional: prefix schema names with service name to avoid conflicts
-            merged.components.schemas[k] = v;
+        for (const [key, value] of Object.entries(doc.components.schemas)) {
+            merged.components.schemas[key] = value;
         }
     }
 
-    // merge securitySchemes, responses, parameters similarly...
     if (doc.components?.securitySchemes) {
-        for (const [k, v] of Object.entries(doc.components.securitySchemes)) {
-            merged.components.securitySchemes[k] = v;
+        for (const [key, value] of Object.entries(doc.components.securitySchemes)) {
+            merged.components.securitySchemes[key] = value;
         }
     }
 
     if (doc.components?.responses) {
-        for (const [k, v] of Object.entries(doc.components.responses)) {
-            merged.components.responses[k] = v;
+        for (const [key, value] of Object.entries(doc.components.responses)) {
+            merged.components.responses[key] = value;
         }
     }
 
     if (doc.components?.parameters) {
-        for (const [k, v] of Object.entries(doc.components.parameters)) {
-            merged.components.parameters[k] = v;
+        for (const [key, value] of Object.entries(doc.components.parameters)) {
+            merged.components.parameters[key] = value;
         }
     }
 
@@ -74,4 +70,5 @@ for (const file of files) {
 }
 
 fs.writeFileSync(path.join(docsDir, 'combined.json'), JSON.stringify(merged, null, 2));
+
 console.log('Wrote docs/combined.json');
