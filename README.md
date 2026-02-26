@@ -158,13 +158,17 @@ An example flow:
 ```
 .
 ├── apps
+│   ├── docs-aggregator
+│   │   ├── docs
+│   │   │   ├── combined.json
+│   │   │   ├── notification-service.json
+│   │   │   ├── task-service.json
+│   │   │   └── user-service.json
+│   │   ├── main.ts
+│   │   └── merge-openapi.ts
 │   ├── notification-service
 │   │   ├── app.module.ts
 │   │   ├── Dockerfile
-│   │   ├── mail
-│   │   │   ├── mail.module.ts
-│   │   │   ├── mail.service.spec.ts
-│   │   │   └── mail.service.ts
 │   │   ├── main.ts
 │   │   └── notification
 │   │       ├── notification.controller.spec.ts
@@ -172,7 +176,8 @@ An example flow:
 │   │       ├── notification.entity.ts
 │   │       ├── notification.module.ts
 │   │       ├── notification.service.spec.ts
-│   │       └── notification.service.ts
+│   │       ├── notification.service.ts
+│   │       └── user-projection.entity.ts
 │   ├── task-service
 │   │   ├── app.module.ts
 │   │   ├── Dockerfile
@@ -216,14 +221,19 @@ An example flow:
 ├── .gitignore
 ├── libs
 │   ├── common
-│   └── database
-│       ├── database.interface.ts
-│       ├── database.module.ts
-│       ├── database.providers.ts
-│       ├── database.service.spec.ts
-│       ├── database.service.ts
+│   ├── database
+│   │   ├── database.interface.ts
+│   │   ├── database.module.ts
+│   │   ├── database.providers.ts
+│   │   ├── database.service.spec.ts
+│   │   ├── database.service.ts
+│   │   ├── index.ts
+│   │   └── README.md
+│   └── mail
 │       ├── index.ts
-│       └── README.md
+│       ├── mail.module.ts
+│       ├── mail.service.spec.ts
+│       └── mail.service.ts
 ├── LICENSE
 ├── migrations
 ├── nest-cli.json
@@ -238,7 +248,7 @@ An example flow:
 ├── tsconfig.build.json
 └── tsconfig.json
 
-17 directories, 63 files
+19 directories, 71 files
 ```
 
 ## Database Structure
