@@ -51,7 +51,7 @@ The task manager application will have the following features:
 - **Kubernetes**: for scaling and managing containers in production
 - **Environment Variables**: for storing sensitive data, such as database credentials and API keys
 
-A High-Level Architecture Digram (Monorepo + Microservices):
+A High-Level Architecture Digram:
 
 ```
                                ┌───────────────────────────┐
