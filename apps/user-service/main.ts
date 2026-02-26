@@ -48,7 +48,7 @@ async function bootstrap() {
 
   if (process.env.GENERATE_SWAGGER === 'true') {
 
-    const outDir = process.env.SWAGGER_OUT_DIR || path.resolve(__dirname, '../../docs');
+    const outDir = process.env.SWAGGER_OUT_DIR || path.resolve(__dirname, '../docs-aggregator/docs');
 
     if (!fs.existsSync(outDir)) {
       fs.mkdirSync(outDir, { recursive: true });
