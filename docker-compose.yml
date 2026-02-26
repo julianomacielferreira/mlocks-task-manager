@@ -52,6 +52,8 @@ services:
         RABBITMQ_PORT: ${RABBITMQ_PORT}
         RABBITMQ_USER: ${RABBITMQ_USER}
         RABBITMQ_PASS: ${RABBITMQ_PASS}
+        GENERATE_SWAGGER: ${GENERATE_SWAGGER}
+        SWAGGER_OUT_DIR: /dist/docs
     depends_on:
       - postgres
       - rabbitmq
@@ -78,6 +80,8 @@ services:
         RABBITMQ_PORT: ${RABBITMQ_PORT}
         RABBITMQ_USER: ${RABBITMQ_USER}
         RABBITMQ_PASS: ${RABBITMQ_PASS}
+        GENERATE_SWAGGER: ${GENERATE_SWAGGER}
+        SWAGGER_OUT_DIR: /dist/docs
     depends_on:
       - postgres
       - rabbitmq
@@ -106,6 +110,8 @@ services:
         RABBITMQ_PASS: ${RABBITMQ_PASS}
         MAILHOG_HOST: ${MAILHOG_HOST}
         MAILHOG_PORT: ${MAILHOG_PORT}
+        GENERATE_SWAGGER: ${GENERATE_SWAGGER}
+        SWAGGER_OUT_DIR: /dist/docs
     depends_on:
       - postgres
       - rabbitmq
@@ -115,6 +121,21 @@ services:
     volumes:
       - .:/app
     command: sh -c "sleep 5 && npm run start:dev notification-service"
+    networks:
+      - mlocks_bridge
+  docs:
+    image: node:20
+    container_name: mlocks_task_manager_docs
+    working_dir: /app
+    volumes:
+      - .:/app
+      - ./docs:/app/docs
+    environment:
+      PORT: 3004
+      SWAGGER_OUT_DIR: /dist/docs
+    ports:
+      - "3004:3004"
+    command: sh -c "npm install --silent && npm run docs:generate && npm run docs:serve"
     networks:
       - mlocks_bridge
       

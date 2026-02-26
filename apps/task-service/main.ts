@@ -24,8 +24,12 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as fs from 'fs';
+import * as path from 'path';
 
 async function bootstrap() {
+
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe({
@@ -34,8 +38,36 @@ async function bootstrap() {
     transform: true,
   }));
 
+  const options = new DocumentBuilder()
+    .setTitle('Task Service')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, options);
+
+  if (process.env.GENERATE_SWAGGER === 'true') {
+
+    const outDir = process.env.SWAGGER_OUT_DIR || path.resolve(__dirname, '../../docs'); // repo-level docs folder or override
+
+    if (!fs.existsSync(outDir)) {
+      fs.mkdirSync(outDir, { recursive: true });
+    }
+
+    fs.writeFileSync(
+      path.join(outDir, 'task-service.json'),
+      JSON.stringify(document, null, 2)
+    );
+
+    await app.close();
+
+    process.exit(0);
+  }
+
   const port = process.env.PORT || 3000;
+
   await app.listen(port);
+
   console.log(`Task service running on port ${port}`);
 }
 bootstrap();

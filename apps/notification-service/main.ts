@@ -25,10 +25,16 @@ import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as fs from 'fs';
+import * as path from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.createApplicationContext(AppModule);
-  const configService = app.get(ConfigService);
+
+  const appContext = await NestFactory.createApplicationContext(AppModule);
+
+  const configService = appContext.get(ConfigService);
+
   const microservice = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
@@ -42,7 +48,39 @@ async function bootstrap() {
       },
     },
   );
+
+  const options = new DocumentBuilder()
+    .setTitle('Notification Service')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+
+  if (process.env.GENERATE_SWAGGER === 'true') {
+
+    const docApp = await NestFactory.create(AppModule);
+
+    const document = SwaggerModule.createDocument(docApp, options);
+
+    const outDir = process.env.SWAGGER_OUT_DIR || path.resolve(__dirname, '../../docs');
+
+    if (!fs.existsSync(outDir)) {
+      fs.mkdirSync(outDir, { recursive: true });
+    }
+
+    fs.writeFileSync(
+      path.join(outDir, 'notification-service.json'),
+      JSON.stringify(document, null, 2)
+    );
+
+    await docApp.close();
+
+    await appContext.close();
+
+    process.exit(0);
+  }
+
   await microservice.listen();
+
   console.log('Notification service is listening');
 }
 bootstrap();

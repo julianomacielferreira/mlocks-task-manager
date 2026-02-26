@@ -25,8 +25,11 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as fs from 'fs';
+import * as path from 'path';
 
 async function bootstrap() {
+
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe({
@@ -35,18 +38,36 @@ async function bootstrap() {
     transform: true,
   }));
 
-  const config = new DocumentBuilder()
-    .setTitle('MLocks Task Manager API')
-    .setDescription('API to manage tasks and users for MLocks Task Manager')
+  const options = new DocumentBuilder()
+    .setTitle('User Service')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
-  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, options);
 
-  SwaggerModule.setup('api', app, documentFactory);
+  if (process.env.GENERATE_SWAGGER === 'true') {
+
+    const outDir = process.env.SWAGGER_OUT_DIR || path.resolve(__dirname, '../../docs');
+
+    if (!fs.existsSync(outDir)) {
+      fs.mkdirSync(outDir, { recursive: true });
+    }
+
+    fs.writeFileSync(
+      path.join(outDir, 'user-service.json'),
+      JSON.stringify(document, null, 2)
+    );
+
+    await app.close();
+
+    process.exit(0);
+  }
 
   const port = process.env.PORT || 3000;
+
   await app.listen(port);
+
   console.log(`User service running on port ${port}`);
 }
 bootstrap();
