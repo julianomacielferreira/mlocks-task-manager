@@ -45,7 +45,8 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
-import { User } from './user.entity';
+import { UserResponseDTO } from './dto/user-response.dto';
+import { plainToInstance } from 'class-transformer';
 import { OwnerGuard } from '../auth/owner.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from './decorator/current-user.decorator';
@@ -58,48 +59,54 @@ export class UserController {
     constructor(private readonly userService: UserService) { }
 
     @ApiOperation({ summary: 'Create a new user' })
-    @ApiCreatedResponse({ type: User })
+    @ApiCreatedResponse({ type: UserResponseDTO })
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    public async create(@Body() createUserDto: CreateUserDTO): Promise<User> {
-        return this.userService.create(createUserDto);
+    public async create(@Body() createUserDto: CreateUserDTO): Promise<UserResponseDTO> {
+        const user = await this.userService.create(createUserDto);
+        return plainToInstance(UserResponseDTO, user, { excludeExtraneousValues: true });
     }
 
     @ApiOperation({ summary: 'Retrieve all users' })
-    @ApiOkResponse({ type: User, isArray: true })
+    @ApiOkResponse({ type: UserResponseDTO, isArray: true })
     @Get()
-    public async findAll(): Promise<User[]> {
-        return this.userService.findAll();
+    public async findAll(): Promise<UserResponseDTO[]> {
+        const users = await this.userService.findAll();
+        return users.map(u => plainToInstance(UserResponseDTO, u, { excludeExtraneousValues: true }));
     }
 
     @ApiOperation({ summary: 'Retrieve a user by id' })
-    @ApiOkResponse({ type: User })
+    @ApiOkResponse({ type: UserResponseDTO })
     @Get(':id')
-    async findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
-        return this.userService.findOne(id);
+    async findOne(@Param('id', ParseIntPipe) id: number): Promise<UserResponseDTO> {
+        const user = await this.userService.findOne(id);
+        return plainToInstance(UserResponseDTO, user, { excludeExtraneousValues: true });
     }
 
     @ApiOperation({ summary: 'Update authenticated user' })
-    @ApiOkResponse({ type: User })
+    @ApiOkResponse({ type: UserResponseDTO })
     @UseGuards(JwtAuthGuard)
     @Put('me')
     public async updateMe(@CurrentUser() user: { id: number }, @Body() dto: UpdateUserDTO) {
-        return this.userService.update(Number(user.id), dto);
+        const updated = await this.userService.update(Number(user.id), dto);
+        return plainToInstance(UserResponseDTO, updated, { excludeExtraneousValues: true });
     }
 
     @ApiOperation({ summary: 'Update a user' })
-    @ApiOkResponse({ type: User })
+    @ApiOkResponse({ type: UserResponseDTO })
     @UseGuards(JwtAuthGuard, OwnerGuard)
     @Put(':id')
-    public async update(@CurrentUser() user: { id: number }, @Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDTO): Promise<User> {
+    public async update(@CurrentUser() user: { id: number }, @Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDTO): Promise<UserResponseDTO> {
 
         if ((user as any).role === 'admin') {
-            return this.userService.update(id, updateUserDto);
+            const updated = await this.userService.update(id, updateUserDto);
+            return plainToInstance(UserResponseDTO, updated, { excludeExtraneousValues: true });
         }
 
         assertOwnerOrAdmin(user, id);
 
-        return this.userService.update(id, updateUserDto);
+        const updated = await this.userService.update(id, updateUserDto);
+        return plainToInstance(UserResponseDTO, updated, { excludeExtraneousValues: true });
 
     }
 
