@@ -526,6 +526,38 @@
           "auth"
         ]
       }
+    },
+    "/users/me": {
+      "put": {
+        "operationId": "UserController_updateMe",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Update authenticated user",
+        "tags": [
+          "users"
+        ]
+      }
     }
   },
   "components": {
