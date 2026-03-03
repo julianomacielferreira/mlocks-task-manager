@@ -47,7 +47,7 @@ describe('UserController', () => {
 
         it('delegates to service.create and returns created user', async () => {
 
-            const dto = { username: 'juliano', email: 'juliano.ferreira@gmail.com', password: 'p' } as any;
+            const dto = { username: 'juliano', email: 'juliano.ferreira@gmail.com' } as any;
             const created = { id: 1, ...dto };
             service.create.mockResolvedValue(created);
 
@@ -63,7 +63,7 @@ describe('UserController', () => {
             const users = [{ id: 1 }];
             service.findAll.mockResolvedValue(users);
 
-            await expect(controller.findAll()).resolves.toBe(users);
+            await expect(controller.findAll()).resolves.toEqual(users);
             expect(service.findAll).toHaveBeenCalled();
         });
     });
@@ -94,17 +94,21 @@ describe('UserController', () => {
 
             const dto = { email: 'juliano.ferreira@gmail.com' } as any;
             const updated = { id: 1, ...dto };
+            const mockCurrentUser = { id: 1 } as any;
+
             service.update.mockResolvedValue(updated);
 
-            await expect(controller.update(1, dto)).resolves.toEqual(updated);
+            await expect(controller.update(mockCurrentUser, 1, dto)).resolves.toEqual(updated);
             expect(service.update).toHaveBeenCalledWith(1, dto);
         });
 
         it('propagates NotFoundException from service', async () => {
 
+            const mockCurrentUser = { id: 123 } as any;
+
             service.update.mockRejectedValue(new NotFoundException('not found'));
 
-            await expect(controller.update(123, { email: 'juliano.ferreira@gmail.com' } as any)).rejects.toBeInstanceOf(NotFoundException);
+            await expect(controller.update(mockCurrentUser, 123, { email: 'juliano.ferreira@gmail.com' } as any)).rejects.toBeInstanceOf(NotFoundException);
             expect(service.update).toHaveBeenCalledWith(123, { email: 'juliano.ferreira@gmail.com' });
         });
     });
