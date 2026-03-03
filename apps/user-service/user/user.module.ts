@@ -28,10 +28,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { User } from './user.entity';
+import { Role } from './role.entity';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([User]),
+        TypeOrmModule.forFeature([User, Role]),
         ClientsModule.registerAsync([
             {
                 name: 'NOTIFICATION_SERVICE',

@@ -27,10 +27,17 @@ import {
     IsOptional,
     IsString,
     MinLength,
-    IsEmail
+    IsEmail,
+    IsInt,
+    IsPositive,
 } from 'class-validator';
 
 export class UpdateUserDTO extends PartialType(CreateUserDTO) {
+
+    @IsOptional()
+    @IsInt()
+    @IsPositive()
+    roleId?: number;
 
     @IsString()
     @IsOptional()

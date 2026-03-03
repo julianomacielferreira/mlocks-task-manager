@@ -22,41 +22,34 @@
  * THE SOFTWARE.
  */
 import {
-    IsEmail,
-    IsNotEmpty,
-    IsString,
-    MinLength,
-    IsOptional,
-    IsInt,
-    IsPositive,
-} from 'class-validator';
+    Injectable,
+    CanActivate,
+    ExecutionContext
+} from '@nestjs/common';
 
-export class CreateUserDTO {
+@Injectable()
+export class OwnerGuard implements CanActivate {
 
-    @IsString()
-    @IsNotEmpty()
-    @MinLength(3, { message: 'Username must be at least 3 characters long.' })
-    username: string;
+    canActivate(executionContext: ExecutionContext): boolean {
 
-    @IsEmail({}, { message: 'Please provide a valid email address.' })
-    @IsNotEmpty()
-    email: string;
+        const req = executionContext.switchToHttp().getRequest();
 
-    @IsString()
-    @IsNotEmpty()
-    @MinLength(6, { message: 'Password must be at least 6 characters long.' })
-    password: string;
+        const user = req.user;
 
-    @IsString()
-    @IsNotEmpty()
-    firstName: string;
+        if (!user) {
+            return false;
+        }
 
-    @IsString()
-    @IsNotEmpty()
-    lastName: string;
+        const idParam = Number(req.params.id || req.body.id);
 
-    @IsOptional()
-    @IsInt()
-    @IsPositive()
-    roleId?: number;
+        if (!idParam) {
+            return false;
+        }
+
+        const tokenId = Number(user.id ?? user.userId ?? user.sub);
+
+        if (Number.isNaN(tokenId)) return false;
+
+        return tokenId === idParam;
+    }
 }

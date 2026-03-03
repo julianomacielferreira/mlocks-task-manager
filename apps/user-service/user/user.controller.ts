@@ -32,6 +32,8 @@ import {
     ParseIntPipe,
     HttpCode,
     HttpStatus,
+    UseGuards,
+    ForbiddenException,
 } from '@nestjs/common';
 import {
     ApiTags,
@@ -44,6 +46,10 @@ import { UserService } from './user.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { User } from './user.entity';
+import { OwnerGuard } from '../auth/owner.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CurrentUser } from './decorator/current-user.decorator';
+import { assertOwnerOrAdmin } from '../auth/auth.utils';
 
 @ApiTags('users')
 @Controller('users')
@@ -73,15 +79,33 @@ export class UserController {
         return this.userService.findOne(id);
     }
 
+    @ApiOperation({ summary: 'Update authenticated user' })
+    @ApiOkResponse({ type: User })
+    @UseGuards(JwtAuthGuard)
+    @Put('me')
+    public async updateMe(@CurrentUser() user: { id: number }, @Body() dto: UpdateUserDTO) {
+        return this.userService.update(Number(user.id), dto);
+    }
+
     @ApiOperation({ summary: 'Update a user' })
     @ApiOkResponse({ type: User })
+    @UseGuards(JwtAuthGuard, OwnerGuard)
     @Put(':id')
-    public async update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDTO): Promise<User> {
+    public async update(@CurrentUser() user: { id: number }, @Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDTO): Promise<User> {
+
+        if ((user as any).role === 'admin') {
+            return this.userService.update(id, updateUserDto);
+        }
+
+        assertOwnerOrAdmin(user, id);
+
         return this.userService.update(id, updateUserDto);
+
     }
 
     @ApiOperation({ summary: 'Delete a user' })
     @ApiResponse({ status: 204, description: 'No content' })
+    @UseGuards(JwtAuthGuard, OwnerGuard)
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     public async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {

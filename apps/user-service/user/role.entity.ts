@@ -22,41 +22,35 @@
  * THE SOFTWARE.
  */
 import {
-    IsEmail,
-    IsNotEmpty,
-    IsString,
-    MinLength,
-    IsOptional,
-    IsInt,
-    IsPositive,
-} from 'class-validator';
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    CreateDateColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 
-export class CreateUserDTO {
+export enum RoleType {
+    ADMIN = 'admin',
+    MANAGER = 'manager',
+    USER = 'user',
+}
 
-    @IsString()
-    @IsNotEmpty()
-    @MinLength(3, { message: 'Username must be at least 3 characters long.' })
-    username: string;
+@Entity('roles')
+export class Role {
 
-    @IsEmail({}, { message: 'Please provide a valid email address.' })
-    @IsNotEmpty()
-    email: string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-    @IsString()
-    @IsNotEmpty()
-    @MinLength(6, { message: 'Password must be at least 6 characters long.' })
-    password: string;
+    @Column({ type: 'enum', enum: RoleType, unique: true })
+    type: RoleType;
 
-    @IsString()
-    @IsNotEmpty()
-    firstName: string;
+    @Column({ length: 100, nullable: true })
+    description?: string;
 
-    @IsString()
-    @IsNotEmpty()
-    lastName: string;
+    @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
+    createdAt: Date;
 
-    @IsOptional()
-    @IsInt()
-    @IsPositive()
-    roleId?: number;
+    @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
+    updatedAt: Date;
+
 }

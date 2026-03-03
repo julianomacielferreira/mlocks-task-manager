@@ -21,42 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {
-    IsEmail,
-    IsNotEmpty,
-    IsString,
-    MinLength,
-    IsOptional,
-    IsInt,
-    IsPositive,
-} from 'class-validator';
+import { Injectable } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
-export class CreateUserDTO {
-
-    @IsString()
-    @IsNotEmpty()
-    @MinLength(3, { message: 'Username must be at least 3 characters long.' })
-    username: string;
-
-    @IsEmail({}, { message: 'Please provide a valid email address.' })
-    @IsNotEmpty()
-    email: string;
-
-    @IsString()
-    @IsNotEmpty()
-    @MinLength(6, { message: 'Password must be at least 6 characters long.' })
-    password: string;
-
-    @IsString()
-    @IsNotEmpty()
-    firstName: string;
-
-    @IsString()
-    @IsNotEmpty()
-    lastName: string;
-
-    @IsOptional()
-    @IsInt()
-    @IsPositive()
-    roleId?: number;
-}
+@Injectable()
+export class JwtAuthGuard extends AuthGuard('jwt') { }

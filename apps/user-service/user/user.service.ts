@@ -26,6 +26,7 @@ import { ClientProxy } from "@nestjs/microservices";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "./user.entity";
+import { Role, RoleType } from './role.entity';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import * as argon2 from "argon2";
@@ -34,8 +35,8 @@ import * as argon2 from "argon2";
 export class UserService {
 
     constructor(
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
+        @InjectRepository(User) private readonly userRepository: Repository<User>,
+        @InjectRepository(Role) private readonly roleRepository: Repository<Role>,
         @Inject("NOTIFICATION_SERVICE") private readonly client: ClientProxy
     ) { }
 
@@ -55,18 +56,38 @@ export class UserService {
 
         const hashedPassword = await argon2.hash(createUserDto.password);
 
+        let role: Role | null = null;
+
+        if (createUserDto.roleId) {
+
+            role = await this.roleRepository.findOne({ where: { id: createUserDto.roleId } });
+
+            if (!role) {
+                throw new NotFoundException(`Role with ID "${createUserDto.roleId}" not found.`);
+            }
+
+        } else {
+
+            role = await this.roleRepository.findOne({ where: { type: RoleType.USER } });
+        }
+
+        const { roleId, password, ...userDataFromRequest } = createUserDto as any;
+
         const newUser = this.userRepository.create({
-            ...createUserDto,
-            password: hashedPassword
+            ...userDataFromRequest,
+            password: hashedPassword,
+            role: role ?? undefined,
         });
 
-        await this.userRepository.save(newUser);
+        const saveResult = await this.userRepository.save(newUser);
 
-        this.client.emit("user.created", { id: newUser.id, username: newUser.username, email: newUser.email });
+        const savedUser: User = Array.isArray(saveResult) ? saveResult[0] : saveResult;
 
-        console.log(`User ${newUser.username} created.Emitted 'user.created' event.`);
+        this.client.emit("user.created", { id: savedUser.id, username: savedUser.username, email: savedUser.email });
 
-        return newUser;
+        console.log(`User ${savedUser.username} created. Emitted 'user.created' event.`);
+
+        return savedUser;
     }
 
     public async findAll(): Promise<User[]> {

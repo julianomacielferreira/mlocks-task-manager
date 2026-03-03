@@ -22,41 +22,17 @@
  * THE SOFTWARE.
  */
 import {
-    IsEmail,
-    IsNotEmpty,
-    IsString,
-    MinLength,
-    IsOptional,
-    IsInt,
-    IsPositive,
-} from 'class-validator';
+    createParamDecorator,
+    ExecutionContext
+} from '@nestjs/common';
 
-export class CreateUserDTO {
+export const CurrentUser = createParamDecorator((data: unknown, executionContext: ExecutionContext) => {
 
-    @IsString()
-    @IsNotEmpty()
-    @MinLength(3, { message: 'Username must be at least 3 characters long.' })
-    username: string;
+    const req = executionContext.switchToHttp().getRequest();
 
-    @IsEmail({}, { message: 'Please provide a valid email address.' })
-    @IsNotEmpty()
-    email: string;
+    const user = req.user || {};
 
-    @IsString()
-    @IsNotEmpty()
-    @MinLength(6, { message: 'Password must be at least 6 characters long.' })
-    password: string;
+    const id = user.userId ?? user.id ?? user.sub ?? undefined;
 
-    @IsString()
-    @IsNotEmpty()
-    firstName: string;
-
-    @IsString()
-    @IsNotEmpty()
-    lastName: string;
-
-    @IsOptional()
-    @IsInt()
-    @IsPositive()
-    roleId?: number;
-}
+    return { ...user, id };
+});

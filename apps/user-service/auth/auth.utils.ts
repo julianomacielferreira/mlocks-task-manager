@@ -21,42 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {
-    IsEmail,
-    IsNotEmpty,
-    IsString,
-    MinLength,
-    IsOptional,
-    IsInt,
-    IsPositive,
-} from 'class-validator';
+import { ForbiddenException } from "@nestjs/common";
 
-export class CreateUserDTO {
+export function assertOwnerOrAdmin(user, id) {
 
-    @IsString()
-    @IsNotEmpty()
-    @MinLength(3, { message: 'Username must be at least 3 characters long.' })
-    username: string;
+    if (user.role === 'admin')
+        return;
 
-    @IsEmail({}, { message: 'Please provide a valid email address.' })
-    @IsNotEmpty()
-    email: string;
-
-    @IsString()
-    @IsNotEmpty()
-    @MinLength(6, { message: 'Password must be at least 6 characters long.' })
-    password: string;
-
-    @IsString()
-    @IsNotEmpty()
-    firstName: string;
-
-    @IsString()
-    @IsNotEmpty()
-    lastName: string;
-
-    @IsOptional()
-    @IsInt()
-    @IsPositive()
-    roleId?: number;
+    if (Number(user.id) !== Number(id))
+        throw new ForbiddenException();
 }
