@@ -37,20 +37,24 @@ const mockRepository = (): MockRepo => ({
 
 const mockClient = () => ({ emit: jest.fn() });
 
+const mockRoleRepository = () => ({ findOne: jest.fn() });
+
 describe('UserService', () => {
 
     let repo: MockRepo;
+    let roleRepo: ReturnType<typeof mockRoleRepository>;
     let client: ReturnType<typeof mockClient>;
     let service: UserService;
 
     beforeEach(() => {
         jest.restoreAllMocks();
         repo = mockRepository();
+        roleRepo = mockRoleRepository();
         client = mockClient();
 
         jest.spyOn(argon2, 'hash').mockImplementation(async (v: string) => `hashed-${v}`);
 
-        service = new UserService(repo as any, client as any);
+        service = new UserService(repo as any, roleRepo as any, client as any);
     });
 
     afterEach(() => jest.clearAllMocks());
