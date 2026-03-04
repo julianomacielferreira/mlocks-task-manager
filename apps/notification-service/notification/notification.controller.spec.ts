@@ -35,6 +35,7 @@ const mockMailService = () => ({
 
 const mockUserRepo = () => ({
     findOne: jest.fn(),
+    save: jest.fn(),
 });
 
 describe('NotificationController', () => {
