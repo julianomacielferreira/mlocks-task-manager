@@ -342,7 +342,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "$ref": "#/components/schemas/UserResponseDTO"
                 }
               }
             }
@@ -364,7 +364,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/User"
+                    "$ref": "#/components/schemas/UserResponseDTO"
                   }
                 }
               }
@@ -396,7 +396,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "$ref": "#/components/schemas/UserResponseDTO"
                 }
               }
             }
@@ -435,7 +435,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "$ref": "#/components/schemas/UserResponseDTO"
                 }
               }
             }
@@ -547,7 +547,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "$ref": "#/components/schemas/UserResponseDTO"
                 }
               }
             }
@@ -587,6 +587,10 @@
         "properties": {}
       },
       "LoginDTO": {
+        "type": "object",
+        "properties": {}
+      },
+      "UserResponseDTO": {
         "type": "object",
         "properties": {}
       }
