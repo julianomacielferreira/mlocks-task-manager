@@ -27,6 +27,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
@@ -59,7 +60,10 @@ export class User {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
   updatedAt: Date;
 
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp with time zone', nullable: true })
+  deletedAt: Date | null;
+
   @ManyToOne(() => Role, { eager: true, nullable: false })
   @JoinColumn({ name: 'role_id' })
   role: Role;
-} 
+}

@@ -44,6 +44,7 @@ CREATE TABLE users (
     last_name VARCHAR(50),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP WITH TIME ZONE, -- For soft deletes
     CONSTRAINT fk_users_role
         FOREIGN KEY (role_id)
         REFERENCES roles(id)
