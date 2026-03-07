@@ -196,16 +196,24 @@ An example flow:
 │       │   ├── auth.controller.ts
 │       │   ├── auth.module.ts
 │       │   ├── auth.service.ts
+│       │   ├── auth.utils.ts
 │       │   ├── dto
 │       │   │   └── login.dto.ts
-│       │   └── jwt.strategy.ts
+│       │   ├── jwt-auth.guard.ts
+│       │   ├── jwt.strategy.ts
+│       │   └── owner.guard.ts
 │       ├── constants.ts
 │       ├── Dockerfile
 │       ├── main.ts
 │       └── user
+│           ├── decorator
+│           │   └── current-user.decorator.ts
 │           ├── dto
 │           │   ├── create-user.dto.ts
-│           │   └── update-user.dto.ts
+│           │   ├── role-response.dto.ts
+│           │   ├── update-user.dto.ts
+│           │   └── user-response.dto.ts
+│           ├── role.entity.ts
 │           ├── user.controller.spec.ts
 │           ├── user.controller.ts
 │           ├── user.entity.ts
@@ -246,7 +254,7 @@ An example flow:
 ├── tsconfig.build.json
 └── tsconfig.json
 
-19 directories, 71 files
+20 directories, 78 files
 ```
 
 ## Database Structure
