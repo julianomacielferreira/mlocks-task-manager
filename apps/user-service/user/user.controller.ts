@@ -110,7 +110,7 @@ export class UserController {
 
     }
 
-    @ApiOperation({ summary: 'Delete a user' })
+    @ApiOperation({ summary: 'Deactivate a user (Soft delete)' })
     @ApiResponse({ status: 204, description: 'No content' })
     @UseGuards(JwtAuthGuard, OwnerGuard)
     @Delete(':id')

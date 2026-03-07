@@ -25,14 +25,14 @@ import { ConflictException, NotFoundException } from '@nestjs/common';
 import * as argon2 from 'argon2';
 import { UserService } from './user.service';
 
-type MockRepo = Partial<Record<'findOne' | 'create' | 'save' | 'find' | 'delete', jest.Mock>>;
+type MockRepo = Partial<Record<'findOne' | 'create' | 'save' | 'find' | 'softDelete', jest.Mock>>;
 
 const mockRepository = (): MockRepo => ({
     findOne: jest.fn(),
     create: jest.fn(),
     save: jest.fn(),
     find: jest.fn(),
-    delete: jest.fn(),
+    softDelete: jest.fn(),
 });
 
 const mockClient = () => ({ emit: jest.fn() });
@@ -192,14 +192,14 @@ describe('UserService', () => {
 
         it('removes user when affected > 0', async () => {
 
-            (repo.delete as jest.Mock).mockResolvedValue({ affected: 1 });
+            (repo.softDelete as jest.Mock).mockResolvedValue({ affected: 1 });
 
             await expect(service.remove(1)).resolves.toBeUndefined();
         });
 
         it('throws NotFoundException when no rows affected', async () => {
 
-            (repo.delete as jest.Mock).mockResolvedValue({ affected: 0 });
+            (repo.softDelete as jest.Mock).mockResolvedValue({ affected: 0 });
 
             await expect(service.remove(999)).rejects.toBeInstanceOf(NotFoundException);
         });

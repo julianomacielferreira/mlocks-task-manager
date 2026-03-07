@@ -142,7 +142,7 @@
             "description": "No content"
           }
         },
-        "summary": "Delete a user",
+        "summary": "Deactivate a user (Soft delete)",
         "tags": [
           "users"
         ]
