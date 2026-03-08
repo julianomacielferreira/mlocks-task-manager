@@ -51,6 +51,7 @@ import { OwnerGuard } from '../auth/owner.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from './decorator/current-user.decorator';
 import { assertOwnerOrAdmin } from '../auth/auth.utils';
+import { AdminGuard } from '../auth/admin.guard';
 
 @ApiTags('users')
 @Controller('users')
@@ -69,6 +70,7 @@ export class UserController {
 
     @ApiOperation({ summary: 'Retrieve all users' })
     @ApiOkResponse({ type: UserResponseDTO, isArray: true })
+    @UseGuards(JwtAuthGuard, AdminGuard)
     @Get()
     public async findAll(): Promise<UserResponseDTO[]> {
         const users = await this.userService.findAll();

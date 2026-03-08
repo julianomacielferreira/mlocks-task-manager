@@ -29,6 +29,7 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { Role } from './role.entity';
+import { AdminGuard } from '../auth/admin.guard';
 
 @Module({
     imports: [
@@ -52,7 +53,7 @@ import { Role } from './role.entity';
         ]),
     ],
     controllers: [UserController],
-    providers: [UserService],
+    providers: [UserService, AdminGuard],
     exports: [UserService],
 })
 export class UserModule { }
