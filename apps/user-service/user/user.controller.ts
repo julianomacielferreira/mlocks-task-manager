@@ -68,7 +68,7 @@ export class UserController {
         return plainToInstance(UserResponseDTO, user, { excludeExtraneousValues: true });
     }
 
-    @ApiOperation({ summary: 'Retrieve all users' })
+    @ApiOperation({ summary: 'Retrieve all users [Admin only]' })
     @ApiOkResponse({ type: UserResponseDTO, isArray: true })
     @UseGuards(JwtAuthGuard, AdminGuard)
     @Get()
@@ -77,8 +77,9 @@ export class UserController {
         return users.map(u => plainToInstance(UserResponseDTO, u, { excludeExtraneousValues: true }));
     }
 
-    @ApiOperation({ summary: 'Retrieve a user by id' })
+    @ApiOperation({ summary: 'Retrieve a user by id [Admin only]' })
     @ApiOkResponse({ type: UserResponseDTO })
+    @UseGuards(JwtAuthGuard, AdminGuard)
     @Get(':id')
     async findOne(@Param('id', ParseIntPipe) id: number): Promise<UserResponseDTO> {
         const user = await this.userService.findOne(id);

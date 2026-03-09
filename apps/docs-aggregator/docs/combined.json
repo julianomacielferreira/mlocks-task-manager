@@ -371,7 +371,7 @@
             }
           }
         },
-        "summary": "Retrieve all users",
+        "summary": "Retrieve all users [Admin only]",
         "tags": [
           "users"
         ]
@@ -402,7 +402,7 @@
             }
           }
         },
-        "summary": "Retrieve a user by id",
+        "summary": "Retrieve a user by id [Admin only]",
         "tags": [
           "users"
         ]
