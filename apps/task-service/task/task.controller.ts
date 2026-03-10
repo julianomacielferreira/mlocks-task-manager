@@ -45,7 +45,7 @@ import { TaskService } from './task.service';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
 import { Task } from './task.entity';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '@app/auth';
 
 @ApiTags('tasks')
 @Controller('tasks')

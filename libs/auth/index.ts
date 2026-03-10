@@ -21,27 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Injectable } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { JwtConstants } from '../constants';
-
-@Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
-
-    constructor() {
-        super({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            ignoreExpiration: false,
-            secretOrKey: JwtConstants.secret,
-        });
-    }
-
-    public async validate(payload: any) {
-
-        return {
-            userId: payload.sub,
-            username: payload.username
-        };
-    }
-}
+export * from './auth.module';
+export * from './jwt-auth.guard';
+export * from './jwt.strategy';
+export * from './decorator/current-user.decorator';
+export * from './constants';

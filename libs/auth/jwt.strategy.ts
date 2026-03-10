@@ -22,7 +22,26 @@
  * THE SOFTWARE.
  */
 import { Injectable } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { JwtConstants } from './constants';
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') { }
+export class JwtStrategy extends PassportStrategy(Strategy) {
+
+    constructor() {
+        super({
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            ignoreExpiration: false,
+            secretOrKey: JwtConstants.secret,
+        });
+    }
+
+    public async validate(payload: any) {
+
+        return {
+            userId: payload.sub,
+            username: payload.username
+        };
+    }
+}

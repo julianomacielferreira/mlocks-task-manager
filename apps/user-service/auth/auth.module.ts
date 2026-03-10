@@ -22,25 +22,18 @@
  * THE SOFTWARE.
  */
 import { Module } from '@nestjs/common';
-import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UserModule } from '../user/user.module';
-import { JwtConstants } from '../constants';
-import { JwtStrategy } from './jwt.strategy';
+import { AuthModule as SharedAuthModule } from '@app/auth';
 
 @Module({
     imports: [
         UserModule,
-        PassportModule,
-        JwtModule.register({
-            secret: JwtConstants.secret,
-            signOptions: { expiresIn: '1h' },
-        }),
+        SharedAuthModule
     ],
     controllers: [AuthController],
-    providers: [AuthService, JwtStrategy],
+    providers: [AuthService],
     exports: [AuthService],
 })
 export class AuthModule { }

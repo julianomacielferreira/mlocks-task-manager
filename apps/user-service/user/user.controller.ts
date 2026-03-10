@@ -48,8 +48,8 @@ import { UpdateUserDTO } from './dto/update-user.dto';
 import { UserResponseDTO } from './dto/user-response.dto';
 import { plainToInstance } from 'class-transformer';
 import { OwnerGuard } from '../auth/owner.guard';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { CurrentUser } from './decorator/current-user.decorator';
+import { JwtAuthGuard } from '@app/auth';
+import { CurrentUser } from '@app/auth';
 import { assertOwnerOrAdmin } from '../auth/auth.utils';
 import { AdminGuard } from '../auth/admin.guard';
 

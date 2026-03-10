@@ -28,7 +28,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TaskController } from './task.controller';
 import { TaskService } from './task.service';
 import { Task } from './task.entity';
-import { AuthModule } from '../auth/auth.module';
+import { AuthModule } from '@app/auth';
 
 @Module({
     imports: [
