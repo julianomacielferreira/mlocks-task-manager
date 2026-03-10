@@ -38,7 +38,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
-import { LoginDTO } from './dto/login.dto';
+import { LoginDTO } from '@app/auth';
 import { User } from '../user/user.entity';
 
 @ApiTags('auth')
