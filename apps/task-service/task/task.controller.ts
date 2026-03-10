@@ -32,6 +32,7 @@ import {
     ParseIntPipe,
     HttpCode,
     HttpStatus,
+    UseGuards,
 } from '@nestjs/common';
 import {
     ApiTags,
@@ -44,6 +45,7 @@ import { TaskService } from './task.service';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
 import { Task } from './task.entity';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -61,6 +63,7 @@ export class TaskController {
 
     @ApiOperation({ summary: 'Retrieve all tasks' })
     @ApiOkResponse({ type: Task, isArray: true })
+    @UseGuards(JwtAuthGuard)
     @Get()
     public async findAll(): Promise<Task[]> {
         return this.taskService.findAll();
