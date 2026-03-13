@@ -50,7 +50,7 @@
             }
           }
         },
-        "summary": "Retrieve all tasks",
+        "summary": "Retrieve all tasks for the current user",
         "tags": [
           "tasks"
         ]
