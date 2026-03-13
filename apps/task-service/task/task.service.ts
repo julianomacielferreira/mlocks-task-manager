@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Brackets, Repository } from "typeorm";
 import { Task } from "./task.entity";
 import { CreateTaskDTO } from "./dto/create-task.dto";
 import { UpdateTaskDTO } from "./dto/update-task.dto";
@@ -60,13 +60,33 @@ export class TaskService {
         return newTask;
     }
 
-    public async findAll(): Promise<Task[]> {
-        return await this.taskRepository.find();
+    public async findAll(userId: number): Promise<Task[]> {
+
+        return await this.taskRepository.find(
+            {
+                where: [
+                    { assignedToUserId: userId },
+                    { createdByUserId: userId }
+                ],
+                order: {
+                    createdAt: 'DESC'
+                }
+            }
+        );
     }
 
-    public async findOne(id: number): Promise<Task> {
+    public async findOne(userId: number, id: number): Promise<Task> {
 
-        const task = await this.taskRepository.findOne({ where: { id } });
+        const queryBuilder = this.taskRepository.createQueryBuilder('task');
+
+        const task = await queryBuilder
+            .where('task.id = :id', { id })
+            .andWhere(new Brackets(queryBuilderInner =>
+                queryBuilderInner
+                    .where('task.assigned_to_user_id = :userId', { userId })
+                    .orWhere('task.created_by_user_id = :userId', { userId })
+            ))
+            .getOne();
 
         if (!task) {
             throw new NotFoundException(`Task with ID ${id} not found.`);
@@ -121,9 +141,9 @@ export class TaskService {
         return tasks;
     }
 
-    public async update(id: number, updateTaskDTO: UpdateTaskDTO): Promise<Task> {
+    public async update(userId: number, id: number, updateTaskDTO: UpdateTaskDTO): Promise<Task> {
 
-        const task = await this.findOne(id);
+        const task = await this.findOne(userId, id);
 
         if (!task) {
             throw new NotFoundException("Task not found");
@@ -134,13 +154,28 @@ export class TaskService {
         return this.taskRepository.save(task);
     }
 
-    public async delete(id: number): Promise<void> {
+    public async delete(userId: number, id: number): Promise<void> {
 
-        const result = await this.taskRepository.delete(id);
+        const result = await this.taskRepository.createQueryBuilder()
+            .update(Task)
+            .set({ deletedAt: () => 'CURRENT_TIMESTAMP' })
+            .where("id = :id", { id })
+            .andWhere(new Brackets(queryBuilder => {
+                queryBuilder.where("assigned_to_user_id = :userId", { userId })
+                    .orWhere("created_by_user_id = :userId", { userId });
+            }))
+            .execute();
 
-        if (result.affected === 0) {
+        if (result.affected === 1)
+            return;
+
+        const exists = await this.taskRepository.findOne({ where: { id }, withDeleted: true });
+
+        if (!exists) {
             throw new NotFoundException(`Task with ID ${id} not found.`);
         }
+
+        throw new ForbiddenException(`Not allowed to delete this task.`);
     }
 
     private throwNotFoundException(tasks: Task[], message: string) {

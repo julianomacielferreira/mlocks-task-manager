@@ -73,7 +73,7 @@ export class UserController {
     @Get()
     public async findAll(): Promise<UserResponseDTO[]> {
         const users = await this.userService.findAll();
-        return users.map(u => plainToInstance(UserResponseDTO, u, { excludeExtraneousValues: true }));
+        return users.map(user => plainToInstance(UserResponseDTO, user, { excludeExtraneousValues: true }));
     }
 
     @ApiOperation({ summary: 'Retrieve a user by id [Admin only]' })

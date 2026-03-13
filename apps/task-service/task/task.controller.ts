@@ -46,6 +46,7 @@ import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
 import { Task } from './task.entity';
 import { JwtAuthGuard } from '@app/auth';
+import { CurrentUser } from '@app/auth';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -61,19 +62,20 @@ export class TaskController {
         return this.taskService.create(createTaskDto);
     }
 
-    @ApiOperation({ summary: 'Retrieve all tasks' })
+    @ApiOperation({ summary: 'Retrieve all tasks for the current user' })
     @ApiOkResponse({ type: Task, isArray: true })
     @UseGuards(JwtAuthGuard)
     @Get()
-    public async findAll(): Promise<Task[]> {
-        return this.taskService.findAll();
+    public async findAll(@CurrentUser() user: { id: number }): Promise<Task[]> {
+        return this.taskService.findAll(user.id);
     }
 
     @ApiOperation({ summary: 'Retrieve a task by id' })
     @ApiOkResponse({ type: Task })
+    @UseGuards(JwtAuthGuard)
     @Get(':id')
-    public async findOne(@Param('id', ParseIntPipe) id: number): Promise<Task> {
-        return this.taskService.findOne(id);
+    public async findOne(@CurrentUser() user: { id: number }, @Param('id', ParseIntPipe) id: number): Promise<Task> {
+        return this.taskService.findOne(user.id, id);
     }
 
     @ApiOperation({ summary: 'Retrieve tasks by user id' })
@@ -113,16 +115,18 @@ export class TaskController {
 
     @ApiOperation({ summary: 'Update a task' })
     @ApiOkResponse({ type: Task })
+    @UseGuards(JwtAuthGuard)
     @Put(':id')
-    public async update(@Param('id', ParseIntPipe) id: number, @Body() updateTaskDto: UpdateTaskDTO): Promise<Task> {
-        return this.taskService.update(id, updateTaskDto);
+    public async update(@CurrentUser() user: { id: number }, @Param('id', ParseIntPipe) id: number, @Body() updateTaskDto: UpdateTaskDTO): Promise<Task> {
+        return this.taskService.update(user.id, id, updateTaskDto);
     }
 
     @ApiOperation({ summary: 'Delete a task' })
     @ApiResponse({ status: 204, description: 'No content' })
+    @UseGuards(JwtAuthGuard)
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    public async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
-        await this.taskService.delete(id);
+    public async remove(@CurrentUser() user: { id: number }, @Param('id', ParseIntPipe) id: number): Promise<void> {
+        await this.taskService.delete(user.id, id);
     }
 }

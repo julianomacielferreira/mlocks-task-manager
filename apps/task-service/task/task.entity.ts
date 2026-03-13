@@ -27,6 +27,7 @@ import {
     Column,
     CreateDateColumn,
     UpdateDateColumn,
+    DeleteDateColumn,
 } from 'typeorm';
 
 export enum TaskStatus {
@@ -76,4 +77,7 @@ export class Task {
 
     @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
     updatedAt: Date;
+
+    @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp with time zone', nullable: true })
+    deletedAt: Date | null;
 }
