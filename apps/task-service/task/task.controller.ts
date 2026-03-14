@@ -121,7 +121,7 @@ export class TaskController {
         return this.taskService.update(user.id, id, updateTaskDto);
     }
 
-    @ApiOperation({ summary: 'Delete a task' })
+    @ApiOperation({ summary: 'Delete a task (soft delete)' })
     @ApiResponse({ status: 204, description: 'No content' })
     @UseGuards(JwtAuthGuard)
     @Delete(':id')
