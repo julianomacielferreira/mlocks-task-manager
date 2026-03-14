@@ -38,12 +38,13 @@ export class TaskService {
         @Inject("NOTIFICATION_SERVICE") private readonly client: ClientProxy
     ) { }
 
-    public async create(createTaskDTO: CreateTaskDTO): Promise<Task> {
+    public async create(userId: number, createTaskDTO: CreateTaskDTO): Promise<Task> {
 
         const newTask = this.taskRepository.create({
             ...createTaskDTO,
             dueDate: createTaskDTO.dueDate ? new Date(createTaskDTO.dueDate) : null,
-            assignedToUserId: createTaskDTO.assignedToUserId ?? null
+            assignedToUserId: createTaskDTO.assignedToUserId ?? null,
+            createdByUserId: userId
         });
 
         await this.taskRepository.save(newTask);

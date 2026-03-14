@@ -54,15 +54,16 @@ export class TaskController {
 
     constructor(private readonly taskService: TaskService) { }
 
-    @ApiOperation({ summary: 'Create a new task' })
+    @ApiOperation({ summary: 'Create a new task (for the current user)' })
     @ApiCreatedResponse({ type: Task })
+    @UseGuards(JwtAuthGuard)
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    public async create(@Body() createTaskDto: CreateTaskDTO): Promise<Task> {
-        return this.taskService.create(createTaskDto);
+    public async create(@CurrentUser() user: { id: number }, @Body() createTaskDto: CreateTaskDTO): Promise<Task> {
+        return this.taskService.create(user.id, createTaskDto);
     }
 
-    @ApiOperation({ summary: 'Retrieve all tasks for the current user' })
+    @ApiOperation({ summary: 'Retrieve all tasks (for the current user)' })
     @ApiOkResponse({ type: Task, isArray: true })
     @UseGuards(JwtAuthGuard)
     @Get()
@@ -70,7 +71,7 @@ export class TaskController {
         return this.taskService.findAll(user.id);
     }
 
-    @ApiOperation({ summary: 'Retrieve a task by id' })
+    @ApiOperation({ summary: 'Retrieve a task by id (for the current user)' })
     @ApiOkResponse({ type: Task })
     @UseGuards(JwtAuthGuard)
     @Get(':id')
@@ -121,7 +122,7 @@ export class TaskController {
         return this.taskService.update(user.id, id, updateTaskDto);
     }
 
-    @ApiOperation({ summary: 'Delete a task (soft delete)' })
+    @ApiOperation({ summary: 'Delete a task (soft delete for the current user)' })
     @ApiResponse({ status: 204, description: 'No content' })
     @UseGuards(JwtAuthGuard)
     @Delete(':id')

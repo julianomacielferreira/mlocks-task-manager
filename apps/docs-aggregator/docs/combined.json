@@ -31,7 +31,7 @@
             }
           }
         },
-        "summary": "Create a new task",
+        "summary": "Create a new task (for the current user)",
         "tags": [
           "tasks"
         ]
@@ -54,7 +54,7 @@
             }
           }
         },
-        "summary": "Retrieve all tasks for the current user",
+        "summary": "Retrieve all tasks (for the current user)",
         "tags": [
           "tasks"
         ]
@@ -85,7 +85,7 @@
             }
           }
         },
-        "summary": "Retrieve a task by id",
+        "summary": "Retrieve a task by id (for the current user)",
         "tags": [
           "tasks"
         ]
@@ -146,7 +146,7 @@
             "description": "No content"
           }
         },
-        "summary": "Delete a task (soft delete)",
+        "summary": "Delete a task (soft delete for the current user)",
         "tags": [
           "tasks"
         ]

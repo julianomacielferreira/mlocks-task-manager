@@ -48,7 +48,4 @@ export class CreateTaskDTO {
     @IsOptional()
     @IsInt()
     assignedToUserId?: number;
-
-    @IsInt()
-    createdByUserId: number;
 }
