@@ -56,9 +56,11 @@ describe('TaskController', () => {
 
             const dto = { title: 'task', dueDate: '2026-02-24' } as any;
             const created = { id: 1, title: 'task' } as any;
+            const mockUser = { id: 1 } as any;
+
             service.create.mockResolvedValue(created);
 
-            await expect(controller.create(dto)).resolves.toEqual(created);
+            await expect(controller.create(mockUser, dto)).resolves.toEqual(created);
             expect(service.create).toHaveBeenCalledWith(dto);
         });
     });
@@ -68,9 +70,11 @@ describe('TaskController', () => {
         it('returns tasks from service', async () => {
 
             const tasks = [{ id: 1 }];
+            const mockUser = { id: 1 } as any;
+
             service.findAll.mockResolvedValue(tasks);
 
-            await expect(controller.findAll()).resolves.toBe(tasks);
+            await expect(controller.findAll(mockUser)).resolves.toBe(tasks);
             expect(service.findAll).toHaveBeenCalled();
         });
     });
@@ -80,9 +84,11 @@ describe('TaskController', () => {
         it('returns task when found', async () => {
 
             const task = { id: 1 };
+            const mockUser = { id: 1 } as any;
+
             service.findOne.mockResolvedValue(task);
 
-            await expect(controller.findOne(1)).resolves.toEqual(task);
+            await expect(controller.findOne(mockUser, 1)).resolves.toEqual(task);
             expect(service.findOne).toHaveBeenCalledWith(1);
         });
 
@@ -90,7 +96,9 @@ describe('TaskController', () => {
 
             service.findOne.mockRejectedValue(new NotFoundException('not found'));
 
-            await expect(controller.findOne(999)).rejects.toBeInstanceOf(NotFoundException);
+            const mockUser = { id: 1 } as any;
+
+            await expect(controller.findOne(mockUser, 999)).rejects.toBeInstanceOf(NotFoundException);
             expect(service.findOne).toHaveBeenCalledWith(999);
         });
     });
@@ -201,9 +209,11 @@ describe('TaskController', () => {
 
             const dto = { title: 'task' } as any;
             const updated = { id: 1, ...dto } as any;
+            const mockUser = { id: 1 } as any;
+
             service.update.mockResolvedValue(updated);
 
-            await expect(controller.update(1, dto)).resolves.toEqual(updated);
+            await expect(controller.update(mockUser, 1, dto)).resolves.toEqual(updated);
             expect(service.update).toHaveBeenCalledWith(1, dto);
         });
 
@@ -211,7 +221,9 @@ describe('TaskController', () => {
 
             service.update.mockRejectedValue(new NotFoundException('none'));
 
-            await expect(controller.update(123, {} as any)).rejects.toBeInstanceOf(NotFoundException);
+            const mockUser = { id: 1 } as any;
+
+            await expect(controller.update(mockUser, 123, {} as any)).rejects.toBeInstanceOf(NotFoundException);
             expect(service.update).toHaveBeenCalledWith(123, {});
         });
     });
@@ -222,7 +234,9 @@ describe('TaskController', () => {
 
             service.delete.mockResolvedValue(undefined);
 
-            await expect(controller.remove(1)).resolves.toBeUndefined();
+            const mockUser = { id: 1 } as any;
+
+            await expect(controller.remove(mockUser, 1)).resolves.toBeUndefined();
             expect(service.delete).toHaveBeenCalledWith(1);
         });
 
@@ -230,7 +244,9 @@ describe('TaskController', () => {
 
             service.delete.mockRejectedValue(new NotFoundException('none'));
 
-            await expect(controller.remove(999)).rejects.toBeInstanceOf(NotFoundException);
+            const mockUser = { id: 1 } as any;
+
+            await expect(controller.remove(mockUser, 999)).rejects.toBeInstanceOf(NotFoundException);
             expect(service.delete).toHaveBeenCalledWith(999);
         });
     });
