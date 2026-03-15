@@ -59,11 +59,12 @@ describe('TaskService', () => {
 
             const dto = { title: 'task', dueDate: '2026-02-24', assignedToUserId: 5 } as any;
             const created = { id: 1, title: 'task', dueDate: new Date('2026-02-24'), assignedToUserId: 5 };
+            const mockUser = { id: 1 } as any;
 
             (repo.create as jest.Mock).mockReturnValue(created);
             (repo.save as jest.Mock).mockResolvedValue(created);
 
-            const res = await service.create(dto);
+            const res = await service.create(mockUser, dto);
 
             expect(repo.create).toHaveBeenCalledWith({
                 ...dto,
@@ -86,11 +87,12 @@ describe('TaskService', () => {
 
             const dto = { title: 'task' } as any;
             const created = { id: 2, title: 'task', dueDate: null, assignedToUserId: null };
+            const mockUser = { id: 1 } as any;
 
             (repo.create as jest.Mock).mockReturnValue(created);
             (repo.save as jest.Mock).mockResolvedValue(created);
 
-            const res = await service.create(dto);
+            const res = await service.create(mockUser, dto);
 
             expect(repo.create).toHaveBeenCalledWith({
                 ...dto,
@@ -113,9 +115,11 @@ describe('TaskService', () => {
         it('returns all tasks', async () => {
 
             const tasks = [{ id: 1 }, { id: 2 }];
+            const mockUser = { id: 1 } as any;
+
             (repo.find as jest.Mock).mockResolvedValue(tasks);
 
-            const res = await service.findAll();
+            const res = await service.findAll(mockUser);
             expect(res).toBe(tasks);
         });
     });
@@ -125,16 +129,20 @@ describe('TaskService', () => {
         it('returns task when found', async () => {
 
             const task = { id: 1 };
+            const mockUser = { id: 1 } as any;
+
             (repo.findOne as jest.Mock).mockResolvedValue(task);
 
-            await expect(service.findOne(1)).resolves.toEqual(task);
+            await expect(service.findOne(mockUser, 1)).resolves.toEqual(task);
         });
 
         it('throws NotFoundException when not found', async () => {
 
             (repo.findOne as jest.Mock).mockResolvedValue(undefined);
 
-            await expect(service.findOne(999)).rejects.toBeInstanceOf(NotFoundException);
+            const mockUser = { id: 1 } as any;
+
+            await expect(service.findOne(mockUser, 999)).rejects.toBeInstanceOf(NotFoundException);
         });
     });
 
@@ -245,7 +253,9 @@ describe('TaskService', () => {
             const saved = { ...existing, ...dto };
             (repo.save as jest.Mock).mockResolvedValue(saved);
 
-            const res = await service.update(1, dto);
+            const mockUser = { id: 1 } as any;
+
+            const res = await service.update(mockUser, 1, dto);
             expect(repo.save).toHaveBeenCalledWith(saved);
             expect(res).toEqual(saved);
         });
@@ -254,7 +264,9 @@ describe('TaskService', () => {
 
             (repo.findOne as jest.Mock).mockResolvedValue(undefined);
 
-            await expect(service.update(123, { title: 'x' } as any)).rejects.toBeInstanceOf(NotFoundException);
+            const mockUser = { id: 1 } as any;
+
+            await expect(service.update(mockUser, 123, { title: 'x' } as any)).rejects.toBeInstanceOf(NotFoundException);
         });
     });
 
@@ -264,14 +276,18 @@ describe('TaskService', () => {
 
             (repo.delete as jest.Mock).mockResolvedValue({ affected: 1 });
 
-            await expect(service.delete(1)).resolves.toBeUndefined();
+            const mockUser = { id: 1 } as any;
+
+            await expect(service.delete(mockUser, 1)).resolves.toBeUndefined();
         });
 
         it('throws NotFoundException when affected === 0', async () => {
 
             (repo.delete as jest.Mock).mockResolvedValue({ affected: 0 });
 
-            await expect(service.delete(999)).rejects.toBeInstanceOf(NotFoundException);
+            const mockUser = { id: 1 } as any;
+
+            await expect(service.delete(mockUser, 999)).rejects.toBeInstanceOf(NotFoundException);
         });
     });
 });
