@@ -120,8 +120,10 @@ They communicate asynchronously via RabbitMQ.
 
 Shared reusable modules:
 
-- `libs/database`
+- `libs/auth`
 - `libs/common`
+- `libs/database`
+- `libs/mail`
 
 These are:
 
@@ -154,7 +156,6 @@ An example flow:
 #### The directory structure of the project:
 
 ```
-.
 ├── apps
 │   ├── docs-aggregator
 │   │   ├── docs
@@ -178,6 +179,7 @@ An example flow:
 │   │       └── user-projection.entity.ts
 │   ├── task-service
 │   │   ├── app.module.ts
+│   │   ├── constants.ts
 │   │   ├── Dockerfile
 │   │   ├── main.ts
 │   │   └── task
@@ -193,21 +195,14 @@ An example flow:
 │   └── user-service
 │       ├── app.module.ts
 │       ├── auth
+│       │   ├── admin.guard.ts
 │       │   ├── auth.controller.ts
 │       │   ├── auth.module.ts
 │       │   ├── auth.service.ts
-│       │   ├── auth.utils.ts
-│       │   ├── dto
-│       │   │   └── login.dto.ts
-│       │   ├── jwt-auth.guard.ts
-│       │   ├── jwt.strategy.ts
-│       │   └── owner.guard.ts
-│       ├── constants.ts
+│       │   └── auth.utils.ts
 │       ├── Dockerfile
 │       ├── main.ts
 │       └── user
-│           ├── decorator
-│           │   └── current-user.decorator.ts
 │           ├── dto
 │           │   ├── create-user.dto.ts
 │           │   ├── role-response.dto.ts
@@ -226,6 +221,17 @@ An example flow:
 ├── .eslintrc.js
 ├── .gitignore
 ├── libs
+│   ├── auth
+│   │   ├── auth.module.ts
+│   │   ├── constants.ts
+│   │   ├── decorator
+│   │   │   └── current-user.decorator.ts
+│   │   ├── dto
+│   │   │   └── login.dto.ts
+│   │   ├── index.ts
+│   │   ├── jwt-auth.guard.ts
+│   │   ├── jwt.strategy.ts
+│   │   └── owner.guard.ts
 │   ├── common
 │   ├── database
 │   │   ├── database.interface.ts
@@ -254,7 +260,7 @@ An example flow:
 ├── tsconfig.build.json
 └── tsconfig.json
 
-20 directories, 78 files
+21 directories, 82 files
 ```
 
 ## Database Structure
