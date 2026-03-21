@@ -24,7 +24,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { TaskService } from './task.service';
 
-type MockRepo = Partial<Record<'create' | 'save' | 'find' | 'findOne' | 'delete', jest.Mock>>;
+type MockRepo = Partial<Record<'create' | 'save' | 'find' | 'findOne' | 'delete' | 'createQueryBuilder', jest.Mock>>;
 
 const mockRepository = (): MockRepo => ({
     create: jest.fn(),
@@ -36,11 +36,27 @@ const mockRepository = (): MockRepo => ({
 
 const mockClient = () => ({ emit: jest.fn() });
 
+const makeQueryBuilderMock = (overrides: any = {}) => {
+
+    const queryBuilder: any = {
+        where: jest.fn().mockReturnThis(),
+        andWhere: jest.fn().mockReturnThis(),
+        orWhere: jest.fn().mockReturnThis(),
+        getOne: jest.fn().mockResolvedValue(overrides.getOneResult),
+        update: jest.fn().mockReturnThis(),
+        set: jest.fn().mockReturnThis(),
+        execute: jest.fn().mockResolvedValue(overrides.executeResult || { affected: 1 }),
+    };
+
+    return queryBuilder;
+};
+
 describe('TaskService', () => {
 
     let repo: MockRepo;
     let client: ReturnType<typeof mockClient>;
     let service: TaskService;
+    let mockUser: any;
 
     beforeEach(() => {
 
@@ -49,6 +65,8 @@ describe('TaskService', () => {
         client = mockClient();
 
         service = new TaskService(repo as any, client as any);
+        mockUser = { id: 1 } as any;
+
     });
 
     afterEach(() => jest.clearAllMocks());
@@ -57,14 +75,13 @@ describe('TaskService', () => {
 
         it('creates task with dueDate converted and emits event', async () => {
 
-            const dto = { title: 'task', dueDate: '2026-02-24', assignedToUserId: 5 } as any;
-            const created = { id: 1, title: 'task', dueDate: new Date('2026-02-24'), assignedToUserId: 5 };
-            const mockUser = { id: 1 } as any;
+            const dto = { title: 'task', dueDate: '2026-02-24', assignedToUserId: 5, createdByUserId: mockUser.id } as any;
+            const created = { id: 1, title: 'task', dueDate: new Date('2026-02-24'), assignedToUserId: 5, createdByUserId: mockUser.id };
 
             (repo.create as jest.Mock).mockReturnValue(created);
             (repo.save as jest.Mock).mockResolvedValue(created);
 
-            const res = await service.create(mockUser, dto);
+            const res = await service.create(mockUser.id, dto);
 
             expect(repo.create).toHaveBeenCalledWith({
                 ...dto,
@@ -85,14 +102,13 @@ describe('TaskService', () => {
 
         it('creates task with null dueDate and null assignedToUserId when absent', async () => {
 
-            const dto = { title: 'task' } as any;
-            const created = { id: 2, title: 'task', dueDate: null, assignedToUserId: null };
-            const mockUser = { id: 1 } as any;
+            const dto = { title: 'task', createdByUserId: mockUser.id } as any;
+            const created = { id: 2, title: 'task', dueDate: null, assignedToUserId: null, createdByUserId: mockUser.id };
 
             (repo.create as jest.Mock).mockReturnValue(created);
             (repo.save as jest.Mock).mockResolvedValue(created);
 
-            const res = await service.create(mockUser, dto);
+            const res = await service.create(mockUser.id, dto);
 
             expect(repo.create).toHaveBeenCalledWith({
                 ...dto,
@@ -115,11 +131,10 @@ describe('TaskService', () => {
         it('returns all tasks', async () => {
 
             const tasks = [{ id: 1 }, { id: 2 }];
-            const mockUser = { id: 1 } as any;
 
             (repo.find as jest.Mock).mockResolvedValue(tasks);
 
-            const res = await service.findAll(mockUser);
+            const res = await service.findAll(mockUser.id);
             expect(res).toBe(tasks);
         });
     });
@@ -128,21 +143,23 @@ describe('TaskService', () => {
 
         it('returns task when found', async () => {
 
-            const task = { id: 1 };
-            const mockUser = { id: 1 } as any;
+            const task = { id: 1, createdByUserId: mockUser.id };
 
-            (repo.findOne as jest.Mock).mockResolvedValue(task);
+            const queryBuilder = makeQueryBuilderMock({ getOneResult: task });
 
-            await expect(service.findOne(mockUser, 1)).resolves.toEqual(task);
+            (repo.createQueryBuilder as jest.Mock) = jest.fn().mockReturnValue(queryBuilder);
+
+            await expect(service.findOne(mockUser.id, 1)).resolves.toEqual(task);
+
         });
 
         it('throws NotFoundException when not found', async () => {
 
-            (repo.findOne as jest.Mock).mockResolvedValue(undefined);
+            const queryBuilderNotFound = makeQueryBuilderMock({ getOneResult: undefined });
 
-            const mockUser = { id: 1 } as any;
+            (repo.createQueryBuilder as jest.Mock) = jest.fn().mockReturnValue(queryBuilderNotFound);
 
-            await expect(service.findOne(mockUser, 999)).rejects.toBeInstanceOf(NotFoundException);
+            await expect(service.findOne(mockUser.id, 999)).rejects.toBeInstanceOf(NotFoundException);
         });
     });
 
@@ -253,9 +270,7 @@ describe('TaskService', () => {
             const saved = { ...existing, ...dto };
             (repo.save as jest.Mock).mockResolvedValue(saved);
 
-            const mockUser = { id: 1 } as any;
-
-            const res = await service.update(mockUser, 1, dto);
+            const res = await service.update(mockUser.id, 1, dto);
             expect(repo.save).toHaveBeenCalledWith(saved);
             expect(res).toEqual(saved);
         });
@@ -264,9 +279,7 @@ describe('TaskService', () => {
 
             (repo.findOne as jest.Mock).mockResolvedValue(undefined);
 
-            const mockUser = { id: 1 } as any;
-
-            await expect(service.update(mockUser, 123, { title: 'x' } as any)).rejects.toBeInstanceOf(NotFoundException);
+            await expect(service.update(mockUser.id, 123, { title: 'x' } as any)).rejects.toBeInstanceOf(NotFoundException);
         });
     });
 
@@ -276,18 +289,14 @@ describe('TaskService', () => {
 
             (repo.delete as jest.Mock).mockResolvedValue({ affected: 1 });
 
-            const mockUser = { id: 1 } as any;
-
-            await expect(service.delete(mockUser, 1)).resolves.toBeUndefined();
+            await expect(service.delete(mockUser.id, 1)).resolves.toBeUndefined();
         });
 
         it('throws NotFoundException when affected === 0', async () => {
 
             (repo.delete as jest.Mock).mockResolvedValue({ affected: 0 });
 
-            const mockUser = { id: 1 } as any;
-
-            await expect(service.delete(mockUser, 999)).rejects.toBeInstanceOf(NotFoundException);
+            await expect(service.delete(mockUser.id, 999)).rejects.toBeInstanceOf(NotFoundException);
         });
     });
 });
