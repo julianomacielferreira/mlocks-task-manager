@@ -134,6 +134,7 @@ An example flow:
 #### The directory structure of the project:
 
 ```
+.
 ├── apps
 │   ├── docs-aggregator
 │   │   ├── docs
@@ -232,13 +233,16 @@ An example flow:
 ├── .prettierrc
 ├── README.md
 ├── schema.sql
+├── static
+│   ├── logo-mlocks-task-manager.png
+│   └── schema_ER_diagram.png
 ├── test
 │   ├── app.e2e-spec.ts
 │   └── jest-e2e.json
 ├── tsconfig.build.json
 └── tsconfig.json
 
-21 directories, 82 files
+22 directories, 84 files
 ```
 
 ## Database Schema ([schema.sql](./schema.sql))
