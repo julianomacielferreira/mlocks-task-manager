@@ -280,7 +280,8 @@ describe('TaskService', () => {
 
         it('throws when task not found (findOne returns undefined)', async () => {
 
-            (repo.findOne as jest.Mock).mockResolvedValue(undefined);
+            const queryBuilderNotFound = makeQueryBuilderMock({ getOneResult: undefined });
+            (repo.createQueryBuilder as jest.Mock) = jest.fn().mockReturnValue(queryBuilderNotFound);
 
             await expect(service.update(mockUser.id, 123, { title: 'x' } as any)).rejects.toBeInstanceOf(NotFoundException);
         });
