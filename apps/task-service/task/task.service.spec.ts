@@ -287,14 +287,20 @@ describe('TaskService', () => {
 
         it('deletes when affected > 0', async () => {
 
-            (repo.delete as jest.Mock).mockResolvedValue({ affected: 1 });
+            const queryBuilderDelete = makeQueryBuilderMock({ executeResult: { affected: 1 } });
+
+            (repo.createQueryBuilder as jest.Mock) = jest.fn().mockReturnValue(queryBuilderDelete);
 
             await expect(service.delete(mockUser.id, 1)).resolves.toBeUndefined();
         });
 
         it('throws NotFoundException when affected === 0', async () => {
 
-            (repo.delete as jest.Mock).mockResolvedValue({ affected: 0 });
+            const queryBuilderDeleteZero = makeQueryBuilderMock({ executeResult: { affected: 0 } });
+
+            (repo.createQueryBuilder as jest.Mock) = jest.fn().mockReturnValue(queryBuilderDeleteZero);
+
+            (repo.findOne as jest.Mock) = jest.fn().mockResolvedValue(undefined);
 
             await expect(service.delete(mockUser.id, 999)).rejects.toBeInstanceOf(NotFoundException);
         });
