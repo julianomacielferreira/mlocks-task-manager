@@ -241,9 +241,28 @@ An example flow:
 21 directories, 82 files
 ```
 
-## Database Structure
+## Database Schema ([schema.sql](./schema.sql))
 
-Explanation of Tables and Columns:
+Explanation of main Tables and Columns:
+
+_**roles**_ Table:
+
+- **id**: SERIAL (auto-incrementing integer) - Primary Key
+- **type**: roles_type_enum (custom enum) - Must be unique and cannot be null.
+- **description**: VARCHAR(100)
+- **created_at**: TIMESTAMP WITH TIME ZONE - Defaults to the current timestamp.
+- **updated_at**: TIMESTAMP WITH TIME ZONE - Defaults to the current timestamp.
+
+```sql
+-- Create Roles Table
+CREATE TABLE roles (
+    id SERIAL PRIMARY KEY,
+    type roles_type_enum NOT NULL UNIQUE,
+    description VARCHAR(100),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+```
 
 _**users**_ Table:
 
@@ -258,13 +277,19 @@ _**users**_ Table:
 -- Create Users Table
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
+    role_id INTEGER DEFAULT NULL,
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL, -- Store hashed passwords, never plain text!
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP WITH TIME ZONE, -- For soft deletes
+    CONSTRAINT fk_users_role
+        FOREIGN KEY (role_id)
+        REFERENCES roles(id)
+        ON DELETE RESTRICT -- Prevent deletion of roles that are assigned to users
 );
 ```
 
@@ -365,6 +390,8 @@ CREATE INDEX idx_notifications_is_read ON notifications (is_read);
 - **Indexes (`CREATE INDEX`)**: Improves query performance on frequently searched or joined columns.
 
 - **`updated_at` Trigger**: Automatically updates the updated_at timestamp whenever a row is modified in users or tasks. This is super handy for tracking changes.
+
+![ER Database Diagram](./static/schema_ER_diagram.png)
 
 ## Compile and run the project
 
