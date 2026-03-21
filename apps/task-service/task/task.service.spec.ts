@@ -263,16 +263,19 @@ describe('TaskService', () => {
 
         it('updates an existing task', async () => {
 
-            const existing = { id: 1, title: 'old' } as any;
-            (repo.findOne as jest.Mock).mockResolvedValue(existing);
-
+            const existingTask = { id: 1, title: 'old', assignedToUserId: 1, createdByUserId: 1 } as any;
             const dto = { title: 'new' } as any;
-            const saved = { ...existing, ...dto };
-            (repo.save as jest.Mock).mockResolvedValue(saved);
 
-            const res = await service.update(mockUser.id, 1, dto);
-            expect(repo.save).toHaveBeenCalledWith(saved);
-            expect(res).toEqual(saved);
+            const queryBuilder = makeQueryBuilderMock({ getOneResult: existingTask });
+            (repo.createQueryBuilder as jest.Mock) = jest.fn().mockReturnValue(queryBuilder);
+
+            (repo.save as jest.Mock) = jest.fn().mockResolvedValue({ ...existingTask, ...dto });
+
+            const res = await service.update(mockUser.id, existingTask.id, dto);
+            expect(res.title).toBe(dto.title);
+
+            expect(repo.createQueryBuilder).toHaveBeenCalledWith('task');
+            expect(queryBuilder.where).toHaveBeenCalledWith('task.id = :id', { id: existingTask.id });
         });
 
         it('throws when task not found (findOne returns undefined)', async () => {
