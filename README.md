@@ -342,6 +342,7 @@ _**notifications**_ Table:
 - **type**: Categorizes the notification (e.g., 'task_assigned', 'system_message').
 - **is_read**: Boolean flag to track if the user has seen the notification.
 - **created_at**: Timestamp.
+
 ```sql
 -- Create Notifications Table
 CREATE TABLE notifications (
@@ -360,6 +361,24 @@ CREATE TABLE notifications (
         FOREIGN KEY (task_id)
         REFERENCES tasks(id)
         ON DELETE SET NULL -- If a task is deleted, notification task_id becomes NULL
+);
+```
+
+_**user_projection**_ Table:
+
+- **id**: INTEGER - Primary Key. Not auto-incrementing.
+- **email**: VARCHAR
+- **username**: VARCHAR
+- **updatedAt**: TIMESTAMP - Defaults to the current time and cannot be null.
+
+```sql
+-- Create Users Preojection Table
+CREATE TABLE user_projection (
+    id int4 NOT NULL,
+    email varchar NULL,
+    username varchar NULL,
+    "updatedAt" timestamp DEFAULT now() NOT NULL,
+    CONSTRAINT pk_user_projection PRIMARY KEY (id)
 );
 ```
 
