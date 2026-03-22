@@ -266,6 +266,13 @@ CREATE TABLE roles (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Seed default roles
+INSERT INTO roles (type, description) VALUES
+    ('admin', 'Administrator with full access'),
+    ('manager', 'Manager with elevated privileges'),
+    ('user', 'Regular user with limited permissions');
+
 ```
 
 _**users**_ Table:
