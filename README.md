@@ -449,6 +449,20 @@ Open the brownser in **http://localhost:3000/api** and you will see the swagger 
 
 ![Swagger Documentation](./static/swagger-docs.png)
 
+## RabbitMQ Management
+
+Open your browser to **http://localhost:15672/#/queues** and you will see RabbitMQ Management.
+
+The login is `guest` and the password is `guest`.
+
+![RabbitMQ Management](./static/rabbitMQ.png)
+
+## MailHog
+
+Open your browser to **http://localhost:8025/** and you will see Mailhog for sending emails.
+
+![Mailhog](./static/mailhog.png)
+
 ## Run tests
 
 ```bash
