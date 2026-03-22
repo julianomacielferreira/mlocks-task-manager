@@ -467,6 +467,43 @@ Open your browser to **http://localhost:8025/** and you will see Mailhog for sen
 
 A Postman collection of endpoints is located in the file [MLocks_Mini_Ledger.postman_collection.json](./static/MLocks-Task-Manager.postman_collection.json) and below are example cURL calls to the endpoints.
 
+### 1. Users
+- **POST /users**
+  
+```bash
+$ curl --location 'http://localhost:3000/users' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "roleId": 1,
+    "username": "julianoEXE",
+    "email": "juliano.maciel.ferreiraCOM@gmail.com",
+    "password": "z0x9c8v7",
+    "firstName": "Juliano",
+    "lastName": "Ferreira"
+}'
+```
+<details>
+<summary><b>Response</b></summary>
+
+```json
+{
+    "id": 17,
+    "username": "julianoJBOD",
+    "email": "juliano.maciel.ferreiraSMTP@gmail.com",
+    "firstName": "Juliano",
+    "lastName": "Ferreira",
+    "role": {
+        "id": 1,
+        "type": "admin"
+    },
+    "createdAt": "2026-03-22T23:55:53.991Z",
+    "updatedAt": "2026-03-22T23:55:53.991Z"
+}
+```
+</details>
+
+---
+
 
 ## Run tests
 
