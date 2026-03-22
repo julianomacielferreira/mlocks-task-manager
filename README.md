@@ -463,6 +463,11 @@ Open your browser to **http://localhost:8025/** and you will see Mailhog for sen
 
 ![Mailhog](./static/mailhog.png)
 
+## Endpoints
+
+A Postman collection of endpoints is located in the file [MLocks_Mini_Ledger.postman_collection.json](./static/MLocks-Task-Manager.postman_collection.json) and below are example cURL calls to the endpoints.
+
+
 ## Run tests
 
 ```bash

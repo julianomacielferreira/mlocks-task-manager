@@ -1,0 +1,386 @@
+{
+  "info": {
+    "_postman_id": "c9c479cc-3362-4fad-879b-12c4490e0ee4",
+    "name": "NestJS MLocks Task Manager",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "46564992",
+    "_collection_link": "https://go.postman.co/collection/46564992-c9c479cc-3362-4fad-879b-12c4490e0ee4?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Users [Needs Authorization]",
+      "item": [
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp1bGlhbm9GVFAiLCJzdWIiOjUsImlhdCI6MTc3Mjg5NjkxMSwiZXhwIjoxNzcyOTAwNTExfQ.yQYzQQlRTJbDP97OThZrG3GLKK2kQa9Sbe3LdtlckEY",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"julianoHTTP\",\n    \"email\": \"ju_maciel_ferreiraHTTP@gmail.com\",\n    \"password\": \"z0x9c8v7\",\n    \"firstName\": \"Juliano\",\n    \"lastName\": \"Ferreira\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/users/5",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Me",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp1bGlhbm9GVFAiLCJzdWIiOjUsImlhdCI6MTc3Mjg5NjkxMSwiZXhwIjoxNzcyOTAwNTExfQ.yQYzQQlRTJbDP97OThZrG3GLKK2kQa9Sbe3LdtlckEY",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"julianoHTTP\",\n    \"email\": \"ju_maciel_ferreiraHTTP@gmail.com\",\n    \"password\": \"z0x9c8v7\",\n    \"firstName\": \"Juliano\",\n    \"lastName\": \"Ferreira\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/users/me",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp1bGlhbm9TREQiLCJzdWIiOjcsImlhdCI6MTc3Mjg5NzYxMSwiZXhwIjoxNzcyOTAxMjExfQ.alZBwloB00LHyNmG-zFrgPStJNRG_8ul6VScLYDnFjw",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/users/7",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "7"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "List Tasks [Assigned and Created By]",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Bearer_Token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3001/tasks",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "tasks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Find Task By id [Assigned and Created By]",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Bearer_Token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3001/tasks/20",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "tasks",
+                "20"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tasks New",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Task {{$randomAbbreviation}}\",\n    \"description\": \"Description of the Task {{$randomAbbreviation}}\",\n    \"status\": \"pending\",\n    \"priority\": \"high\",\n    \"dueDate\": \"2016-02-11\",\n    \"assignedToUserId\": 6\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3001/tasks",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "tasks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Task [Soft Delete]",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Bearer_Token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3001/tasks/18",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "tasks",
+                "18"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth / Login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"julianoJSON\",\n    \"password\": \"z0x9c8v7\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/auth/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Auth / Profile",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{Bearer_Token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/auth/profile",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "auth",
+            "profile"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List all Users [Admin Only]",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{Bearer_Token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/users",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Find User [Admin Only]",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{Bearer_Token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp1bGlhbm9SQU0iLCJzdWIiOjExLCJpYXQiOjE3NzMwMTMzNTUsImV4cCI6MTc3MzAxNjk1NX0.CCShTpdDpvtQmqnB7o9lNXIlRjxcJj68GO1yO3jMz7k",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/users/6",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "users",
+            "6"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New User",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"roleId\": 1,\n    \"username\": \"juliano{{$randomAbbreviation}}\",\n    \"email\": \"juliano.maciel.ferreira{{$randomAbbreviation}}@gmail.com\",\n    \"password\": \"z0x9c8v7\",\n    \"firstName\": \"Juliano\",\n    \"lastName\": \"Ferreira\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/users",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "users"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
