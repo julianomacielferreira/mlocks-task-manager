@@ -468,6 +468,7 @@ Open your browser to **http://localhost:8025/** and you will see Mailhog for sen
 A Postman collection of endpoints is located in the file [MLocks_Mini_Ledger.postman_collection.json](./static/MLocks-Task-Manager.postman_collection.json) and below are example cURL calls to the endpoints.
 
 ### 1. Users
+
 - **POST /users**
   
 ```bash
@@ -477,7 +478,7 @@ $ curl --location 'http://localhost:3000/users' \
     "roleId": 1,
     "username": "julianoEXE",
     "email": "juliano.maciel.ferreiraCOM@gmail.com",
-    "password": "z0x9c8v7",
+    "password": "password",
     "firstName": "Juliano",
     "lastName": "Ferreira"
 }'
@@ -498,6 +499,28 @@ $ curl --location 'http://localhost:3000/users' \
     },
     "createdAt": "2026-03-22T23:55:53.991Z",
     "updatedAt": "2026-03-22T23:55:53.991Z"
+}
+```
+</details>
+
+---
+
+- **POST /auth/login**
+  
+```bash
+$ curl --location 'http://localhost:3000/auth/login' \
+--header 'Content-Type: application/json' \
+--data '{
+    "username": "julianoJSON",
+    "password": "password"
+}'
+```
+<details>
+<summary><b>Response</b></summary>
+
+```json
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp1bGlhbm9KU09OIiwic3ViIjoxMiwiaWF0IjoxNzc0MjI0NDU0LCJleHAiOjE3NzQyMjgwNTR9.MyOOXCLyknUmjOBHcEns0Fo2B50ApCTRaGt6hMj-aog"
 }
 ```
 </details>
