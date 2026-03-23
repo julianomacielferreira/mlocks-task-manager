@@ -469,7 +469,7 @@ A Postman collection of endpoints is located in the file [MLocks_Mini_Ledger.pos
 
 ### 1. Users
 
-- **Create a new user: POST `/users`**
+- **New user: POST `/users`**
   
 ```bash
 $ curl --location 'http://localhost:3000/users' \
@@ -527,7 +527,7 @@ $ curl --location 'http://localhost:3000/auth/login' \
 
 ---
 
-- **User profile: POST `/auth/profile`**
+- **Retrieve authenticated user profile: POST `/auth/profile`**
   
 ```bash
 $ curl --location --request POST 'http://localhost:3000/auth/profile' \
@@ -624,6 +624,42 @@ $ curl --location 'http://localhost:3000/users/6' \
     },
     "createdAt": "2026-03-03T02:13:33.429Z",
     "updatedAt": "2026-03-03T02:13:33.429Z"
+}
+```
+</details>
+
+---
+
+- **Update user: PUT `/users/:id`**
+  
+```bash
+$ curl --location --request PUT 'http://localhost:3000/users/12' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp1bGlhbm9KU09OIiwic3ViIjoxMiwiaWF0IjoxNzc0Mjg4Mjk1LCJleHAiOjE3NzQyOTE4OTV9.eRkfjPo-2Xou2IlIIZKZZWzzi5EWV6NxXhd6Vv4h85A' \
+--data-raw '{
+    "username": "julianoJSON",
+    "email": "juliano.maciel.ferreiraXML@gmail.com",
+    "password": "password",
+    "firstName": "Juliano",
+    "lastName": "Ferreira"
+}'
+```
+<details>
+<summary><b>Response</b></summary>
+
+```json
+{
+    "id": 12,
+    "username": "julianoJSON",
+    "email": "juliano.maciel.ferreiraXML@gmail.com",
+    "firstName": "Juliano",
+    "lastName": "Ferreira",
+    "role": {
+        "id": 1,
+        "type": "admin"
+    },
+    "createdAt": "2026-03-03T21:07:56.729Z",
+    "updatedAt": "2026-03-23T18:19:49.470Z"
 }
 ```
 </details>
