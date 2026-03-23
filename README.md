@@ -602,6 +602,34 @@ $ curl --location 'http://localhost:3000/users' \
 
 ---
 
+- **Find user: GET /users/:id**
+  
+```bash
+$ curl --location 'http://localhost:3000/users/6' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp1bGlhbm9KU09OIiwic3ViIjoxMiwiaWF0IjoxNzc0Mjg4Mjk1LCJleHAiOjE3NzQyOTE4OTV9.eRkfjPo-2Xou2IlIIZKZZWzzi5EWV6NxXhd6Vv4h85A'
+```
+<details>
+<summary><b>Response</b></summary>
+
+```json
+{
+    "id": 6,
+    "username": "julianoSSL",
+    "email": "juliano.maciel.ferreiraSSL@gmail.com",
+    "firstName": "Juliano",
+    "lastName": "Ferreira",
+    "role": {
+        "id": 1,
+        "type": "admin"
+    },
+    "createdAt": "2026-03-03T02:13:33.429Z",
+    "updatedAt": "2026-03-03T02:13:33.429Z"
+}
+```
+</details>
+
+---
+
 
 ## Run tests
 
