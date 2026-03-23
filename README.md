@@ -469,7 +469,7 @@ A Postman collection of endpoints is located in the file [MLocks_Mini_Ledger.pos
 
 ### 1. Users
 
-- **POST /users**
+- **Create a new user: POST <u>/users</u>**
   
 ```bash
 $ curl --location 'http://localhost:3000/users' \
@@ -505,7 +505,7 @@ $ curl --location 'http://localhost:3000/users' \
 
 ---
 
-- **POST /auth/login**
+- **Login: POST <u>/auth/login</u>**
   
 ```bash
 $ curl --location 'http://localhost:3000/auth/login' \
@@ -527,7 +527,7 @@ $ curl --location 'http://localhost:3000/auth/login' \
 
 ---
 
-- **POST /auth/profile**
+- **User profile: POST <u>/auth/profile</u>**
   
 ```bash
 $ curl --location --request POST 'http://localhost:3000/auth/profile' \
@@ -554,6 +554,49 @@ $ curl --location --request POST 'http://localhost:3000/auth/profile' \
         "updatedAt": "2026-03-03T01:01:48.050Z"
     }
 }
+```
+</details>
+
+---
+
+- **List all Users: GET <u>/users</u>**
+  
+```bash
+$ curl --location 'http://localhost:3000/users' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp1bGlhbm9KU09OIiwic3ViIjoxMiwiaWF0IjoxNzc0MjI2ODg2LCJleHAiOjE3NzQyMzA0ODZ9.y5HVjv7E1atKmTzNOateK1I2QqJOvvTzCbGzjTP7PoY'
+```
+<details>
+<summary><b>Response</b></summary>
+
+```json
+[
+    {
+        "id": 6,
+        "username": "julianoSSL",
+        "email": "juliano.maciel.ferreiraSSL@gmail.com",
+        "firstName": "Juliano",
+        "lastName": "Ferreira",
+        "role": {
+            "id": 1,
+            "type": "admin"
+        },
+        "createdAt": "2026-03-03T02:13:33.429Z",
+        "updatedAt": "2026-03-03T02:13:33.429Z"
+    },
+    {
+        "id": 8,
+        "username": "julianoEXE",
+        "email": "juliano.maciel.ferreiraPCI@gmail.com",
+        "firstName": "Juliano",
+        "lastName": "Ferreira",
+        "role": {
+            "id": 3,
+            "type": "user"
+        },
+        "createdAt": "2026-03-03T02:13:44.498Z",
+        "updatedAt": "2026-03-03T02:13:44.498Z"
+    }
+]
 ```
 </details>
 
