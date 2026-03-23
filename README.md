@@ -878,8 +878,25 @@ Tests:       94 passed, 94 total
 Snapshots:   0 total
 Time:        12.876 s
 Ran all test suites.
-
 ```
+
+## References
+
+- Nest: [https://nestjs.com/](https://nestjs.com/)
+
+- TypeScript: [https://www.typescriptlang.org/](https://www.typescriptlang.org/)
+
+- Node.js: [https://nodejs.org/](https://nodejs.org/)
+
+- PostgreSQL: [https://www.postgresql.org/](https://www.postgresql.org/)
+
+- Docker: [https://docs.docker.com](https://docs.docker.com)
+
+- Docker Compose: [https://docs.docker.com/compose](https://docs.docker.com/compose)
+
+- RabbitMQ: [https://www.rabbitmq.com/](https://www.rabbitmq.com/)
+
+- The Practical Test Pyramid: [https://martinfowler.com/articles/practical-test-pyramid.html](https://martinfowler.com/articles/practical-test-pyramid.html)
 
 ## License
 
