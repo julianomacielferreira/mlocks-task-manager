@@ -527,6 +527,38 @@ $ curl --location 'http://localhost:3000/auth/login' \
 
 ---
 
+- **POST /auth/profile**
+  
+```bash
+$ curl --location --request POST 'http://localhost:3000/auth/profile' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp1bGlhbm9KU09OIiwic3ViIjoxMiwiaWF0IjoxNzc0MjI2ODg2LCJleHAiOjE3NzQyMzA0ODZ9.y5HVjv7E1atKmTzNOateK1I2QqJOvvTzCbGzjTP7PoY'
+```
+<details>
+<summary><b>Response</b></summary>
+
+```json
+{
+    "id": 12,
+    "username": "julianoJSON",
+    "email": "juliano.maciel.ferreiraXML@gmail.com",
+    "firstName": "Juliano",
+    "lastName": "Ferreira",
+    "createdAt": "2026-03-03T21:07:56.729Z",
+    "updatedAt": "2026-03-03T21:07:56.729Z",
+    "deletedAt": null,
+    "role": {
+        "id": 1,
+        "type": "admin",
+        "description": "Administrator with full access",
+        "createdAt": "2026-03-03T01:01:48.050Z",
+        "updatedAt": "2026-03-03T01:01:48.050Z"
+    }
+}
+```
+</details>
+
+---
+
 
 ## Run tests
 
