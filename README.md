@@ -469,7 +469,7 @@ A Postman collection of endpoints is located in the file [MLocks_Mini_Ledger.pos
 
 ### 1. Users
 
-- **Create a new user: POST <u>/users</u>**
+- **Create a new user: POST /users**
   
 ```bash
 $ curl --location 'http://localhost:3000/users' \
@@ -505,7 +505,7 @@ $ curl --location 'http://localhost:3000/users' \
 
 ---
 
-- **Login: POST <u>/auth/login</u>**
+- **Login: POST /auth/login**
   
 ```bash
 $ curl --location 'http://localhost:3000/auth/login' \
@@ -527,7 +527,7 @@ $ curl --location 'http://localhost:3000/auth/login' \
 
 ---
 
-- **User profile: POST <u>/auth/profile</u>**
+- **User profile: POST /auth/profile**
   
 ```bash
 $ curl --location --request POST 'http://localhost:3000/auth/profile' \
@@ -559,7 +559,7 @@ $ curl --location --request POST 'http://localhost:3000/auth/profile' \
 
 ---
 
-- **List all Users: GET** <u>**/users**</u>
+- **List all Users: GET /users**
   
 ```bash
 $ curl --location 'http://localhost:3000/users' \
