@@ -702,6 +702,13 @@ $ curl --location --request PUT 'http://localhost:3000/users/me' \
 
 ---
 
+- **Soft delete user (admin only): DELETE `/users/:id`**
+  
+```bash
+$ curl --location --request DELETE 'http://localhost:3000/users/12' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp1bGlhbm9KU09OIiwic3ViIjoxMiwiaWF0IjoxNzc0MjkwNzkzLCJleHAiOjE3NzQyOTQzOTN9.gvYoaosbulZ85_uKhV-K0q8LY3Nd8DRuFAEe-L6Axhk'
+```
+---
 
 ## Run tests
 

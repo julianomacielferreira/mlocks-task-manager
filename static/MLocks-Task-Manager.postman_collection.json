@@ -13,17 +13,21 @@
         {
           "name": "Update User",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Bearer_Token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp1bGlhbm9GVFAiLCJzdWIiOjUsImlhdCI6MTc3Mjg5NjkxMSwiZXhwIjoxNzcyOTAwNTExfQ.yQYzQQlRTJbDP97OThZrG3GLKK2kQa9Sbe3LdtlckEY",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"username\": \"julianoHTTP\",\n    \"email\": \"ju_maciel_ferreiraHTTP@gmail.com\",\n    \"password\": \"z0x9c8v7\",\n    \"firstName\": \"Juliano\",\n    \"lastName\": \"Ferreira\"\n}",
+              "raw": "{\n    \"username\": \"julianoJSON\",\n    \"email\": \"juliano.maciel.ferreiraXML@gmail.com\",\n    \"password\": \"z0x9c8v7\",\n    \"firstName\": \"Juliano\",\n    \"lastName\": \"Ferreira\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -31,7 +35,7 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/users/5",
+              "raw": "http://localhost:3000/users/12",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -39,7 +43,7 @@
               "port": "3000",
               "path": [
                 "users",
-                "5"
+                "12"
               ]
             }
           },
@@ -48,17 +52,21 @@
         {
           "name": "Update Me",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Bearer_Token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp1bGlhbm9GVFAiLCJzdWIiOjUsImlhdCI6MTc3Mjg5NjkxMSwiZXhwIjoxNzcyOTAwNTExfQ.yQYzQQlRTJbDP97OThZrG3GLKK2kQa9Sbe3LdtlckEY",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"username\": \"julianoHTTP\",\n    \"email\": \"ju_maciel_ferreiraHTTP@gmail.com\",\n    \"password\": \"z0x9c8v7\",\n    \"firstName\": \"Juliano\",\n    \"lastName\": \"Ferreira\"\n}",
+              "raw": "{\n    \"username\": \"julianoJSON\",\n    \"email\": \"juliano.maciel.ferreiraXML@gmail.com\",\n    \"password\": \"z0x9c8v7\",\n    \"firstName\": \"Juliano\",\n    \"lastName\": \"Ferreira\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -83,16 +91,20 @@
         {
           "name": "Delete User",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Bearer_Token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp1bGlhbm9TREQiLCJzdWIiOjcsImlhdCI6MTc3Mjg5NzYxMSwiZXhwIjoxNzcyOTAxMjExfQ.alZBwloB00LHyNmG-zFrgPStJNRG_8ul6VScLYDnFjw",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
-              "raw": "http://localhost:3000/users/7",
+              "raw": "http://localhost:3000/users/12",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -100,7 +112,7 @@
               "port": "3000",
               "path": [
                 "users",
-                "7"
+                "12"
               ]
             }
           },
@@ -173,6 +185,16 @@
         {
           "name": "Tasks New",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Bearer_Token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [],
             "body": {
