@@ -559,7 +559,7 @@ $ curl --location --request POST 'http://localhost:3000/auth/profile' \
 
 ---
 
-- **List all Users: GET <u>/users</u>**
+- **List all Users: GET** <u>**/users**</u>
   
 ```bash
 $ curl --location 'http://localhost:3000/users' \
